@@ -386,6 +386,13 @@ input[data-climonto]{max-width:120px;margin-left:auto;display:block}
 .kpi .pair.real b{font-size:1.3rem;font-family:var(--f-display)}
 .kpi.k-fx{background:color-mix(in srgb,#D8B25C 22%,var(--surface))!important}
 
+/* actividades finalizadas */
+.seg button[aria-pressed="true"].fin{background:var(--clubbar);color:var(--clubbar-ink)}
+.seg button[aria-pressed="true"]:not(.pend):not(.done):not(.fin){background:var(--sunk);color:var(--ink)}
+.act-card.fin{opacity:.92}
+.act-card.fin .stub{background:var(--na-soft);color:var(--ink);border-right-color:var(--line)}
+.act-card.fin .admit{color:var(--muted)}
+.note.fin-note{background:var(--na-soft);color:var(--ink)}
 /* ===== App móvil (PWA) ===== */
 html{-webkit-text-size-adjust:100%;background:var(--bg)}
 body{margin:0;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
@@ -1269,27 +1276,30 @@ function vPayAct(){
 /* ---------- activities ---------- */
 function curAct(){return S.acts.find(a=>a.id===S.actId)||null;}
 const isFut=a=>a&&a.estado==='futura';
-function actCards(list){return `<div class="grid acts">${list.map(a=>{const c=actCalc(a);return `<button class="act-card${isFut(a)?' fut':''}" data-openact="${esc(a.id)}" aria-label="${esc(a.nombre)}, ${esc(fmtDate(a.fecha))}">
+const isFin=a=>a&&a.estado==='finalizada';
+function actCards(list){return `<div class="grid acts">${list.map(a=>{const c=actCalc(a);return `<button class="act-card${isFut(a)?' fut':''}${isFin(a)?' fin':''}" data-openact="${esc(a.id)}" aria-label="${esc(a.nombre)}, ${esc(fmtDate(a.fecha))}">
     <span class="stub">${a.fecha?`<span class="d">${+a.fecha.slice(8,10)}</span><span class="m">${MES3[+a.fecha.slice(5,7)-1]}</span><span class="y">${a.fecha.slice(0,4)}</span>`:'<span class="m">Sin fecha</span>'}</span>
-    <span class="body"><span class="admit">${isFut(a)?'Futura · solo presupuesto':'En marcha'}</span>
+    <span class="body"><span class="admit">${isFut(a)?'Futura · solo presupuesto':isFin(a)?'Finalizada':'En marcha'}</span>
     <h3>${esc(a.nombre)}</h3>
     <span class="figs">
       <span>Presupuesto<b>${money(c.presupuesto)}</b></span>
       <span>Precio por chica<b>${c.precio?money(c.precio):'—'}</b></span>
       <span>${isFut(a)?'Chicas esperadas':'Inscritas'}<b>${isFut(a)?c.esperadas:`${c.parts.length} <small class="muted">(${c.pagadas} pagaron)</small>`}</b></span>
-      <span>Ganancia estimada<b class="${c.gananciaEsperada<0?'amt-out':'amt-in'}">${money(c.gananciaEsperada)}</b></span>
+      ${isFin(a)?`<span>Ganancia real<b class="${c.gananciaReal<0?'amt-out':'amt-in'}">${money(c.gananciaReal)}</b></span>`:`<span>Ganancia estimada<b class="${c.gananciaEsperada<0?'amt-out':'amt-in'}">${money(c.gananciaEsperada)}</b></span>`}
     </span></span></button>`;}).join('')}</div>`;}
 function vActividades(){
   const a=curAct();
   if(a) return vActDetail(a);
   const list=[...S.acts].sort((x,y)=>(y.fecha||'').localeCompare(x.fecha||''));
   if(!list.length) return `<div class="panel empty">Aún no hay actividades. Crea la primera con <b>+ Nueva actividad</b>, por ejemplo “Pintar calabazas”, y arma su presupuesto.</div>`;
-  const run=list.filter(a=>!isFut(a)), fut=list.filter(isFut).sort((x,y)=>(x.fecha||'9').localeCompare(y.fecha||'9'));
+  const run=list.filter(a=>!isFut(a)&&!isFin(a)), fut=list.filter(isFut).sort((x,y)=>(x.fecha||'9').localeCompare(y.fecha||'9')), fin=list.filter(isFin);
   return `
   <div class="sec-head" style="margin-top:0"><h2>En marcha</h2><span class="muted">${run.length} · cuentan en Pagos</span></div>
   ${run.length?actCards(run):'<div class="panel empty">No hay actividades en marcha.</div>'}
   <div class="sec-head" style="margin-top:26px"><h2>Futuras</h2><span class="muted">${fut.length} · solo para calcular, no cuentan en Pagos</span></div>
-  ${fut.length?actCards(fut):'<div class="panel empty">No hay actividades futuras. Crea una con <b>+ Nueva actividad</b> y elige “Futura” para calcular su presupuesto.</div>'}`;
+  ${fut.length?actCards(fut):'<div class="panel empty">No hay actividades futuras. Crea una con <b>+ Nueva actividad</b> y elige “Futura” para calcular su presupuesto.</div>'}
+  <div class="sec-head" style="margin-top:26px"><h2>Finalizadas</h2><span class="muted">${fin.length} · registro; siguen contando en Pagos en su mes</span></div>
+  ${fin.length?actCards(fin):'<div class="panel empty">Todavía no hay actividades finalizadas. Cuando termine una, ábrela y toca <b>Finalizada</b>: queda guardada aquí sin eliminarla.</div>'}`;
 }
 function vActDetail(a){
   const c=actCalc(a); const ro=!S.canWrite; const dis=ro?' disabled':'';
@@ -1297,7 +1307,8 @@ function vActDetail(a){
   return `
   <button class="back" data-actback="1">← Todas las actividades</button>
   <div class="sec-head" style="margin-top:0"><div><h2>${esc(a.nombre)}</h2><span class="muted">${esc(fmtDate(a.fecha))}</span></div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="seg"><button class="pend" data-actst="futura" aria-pressed="${isFut(a)}"${dis}>Futura</button><button class="done" data-actst="marcha" aria-pressed="${!isFut(a)}"${dis}>En marcha</button></span>${ro?'':`<button class="btn small" data-editact="${esc(a.id)}">Editar o eliminar</button>`}</div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="seg"><button class="pend" data-actst="futura" aria-pressed="${isFut(a)}"${dis}>Futura</button><button class="done" data-actst="marcha" aria-pressed="${!isFut(a)&&!isFin(a)}"${dis}>En marcha</button><button class="fin" data-actst="finalizada" aria-pressed="${isFin(a)}"${dis}>Finalizada</button></span>${ro?'':`<button class="btn small" data-editact="${esc(a.id)}">Editar o eliminar</button>`}</div></div>
+  ${isFin(a)?`<p class="note fin-note" style="margin:0 0 14px">Actividad finalizada: queda en el registro y sigue contando en Pagos en el mes de su fecha. Puedes seguir marcando pagos si alguna chica te paga después.</p>`:''}
   ${isFut(a)?`<p class="note" style="margin:0 0 14px">Actividad futura: es solo para calcular el presupuesto y la ganancia. No se suma en Pagos hasta que la pongas <b>En marcha</b>.</p>`:''}
   <div class="grid kpis">
     <div class="kpi"><span class="lbl">Presupuesto total</span><span class="val">${money(c.presupuesto)}</span><span class="of">${money(c.gastado)} ya comprado</span>${bar(c.gastado,c.presupuesto)}<span class="sub">faltan ${money(c.falta)} por comprar</span></div>
@@ -1344,12 +1355,13 @@ function vActDetail(a){
   <section class="panel">
     <div class="sec-head"><h2>Inscritas</h2><span class="muted num">${c.parts.length} inscritas · ${c.pagadas} pagaron · ${money(c.cobrado)} cobrado${c.porCobrar?` · faltan ${money(c.porCobrar)}`:''}</span></div>
     ${ro?'':`<div class="parts-add" style="position:relative"><input type="text" id="np-n" autocomplete="off" placeholder="Inscribir: busca una chica o escribe un nombre nuevo"><button class="btn" data-addpart="1">Inscribir</button><div id="np-sug" class="sug" hidden></div></div>`}
-    ${c.parts.length>0?`<div class="toolbar" style="margin:6px 0 4px"><div class="grow"><input type="search" id="f-partq" placeholder="Buscar entre las ${c.parts.length} inscritas" value="${esc(S.partQ)}"></div></div>`:''}
-    ${(()=>{const all=c.parts.map(p=>{const m=p.memberId&&S.allMembers.find(x=>x.id===p.memberId);return {p,m,nm:m?full(m):p.nombre};}).sort((a,b)=>cmpEs(a.nm,b.nm));
-      const found=searchList(all,x=>x.nm+' '+(x.m?clubName(x.m.club):''),S.partQ); const LIM=10; const showAll=S.partAll||!!norm(S.partQ); const shown=showAll?found:found.slice(0,LIM);
-      return (c.parts.length?approxNote(found,S.partQ)+`<div class="list">${shown.map(({p,m})=>`<div class="row"><div>${m?`<button class="link" data-open="${esc(m.id)}">${esc(full(m))}</button><div class="muted" style="font-size:.82rem">${esc(clubName(m.club))}</div>`:`<b>${esc(p.nombre)}</b><div class="muted" style="font-size:.82rem">No está en los clubes</div>`}</div>
+    ${c.parts.length>0?`<div class="toolbar" style="margin:6px 0 4px"><div class="grow"><input type="search" id="f-partq" placeholder="Buscar entre las ${c.parts.length} inscritas" value="${esc(S.partQ)}"></div>
+      <span class="seg" role="group" aria-label="Filtrar inscritas"><button data-partf="all" aria-pressed="${(S.partF||'all')==='all'}">Todas</button><button class="pend" data-partf="debe" aria-pressed="${S.partF==='debe'}">Deben (${c.parts.length-c.pagadas})</button><button class="done" data-partf="pago" aria-pressed="${S.partF==='pago'}">Pagaron (${c.pagadas})</button></span></div>`:''}
+    ${(()=>{const PF=S.partF||'all';const all=c.parts.filter(p=>PF==='all'||(PF==='debe'?!p.pagado:!!p.pagado)).map(p=>{const m=p.memberId&&S.allMembers.find(x=>x.id===p.memberId);return {p,m,nm:m?full(m):p.nombre};}).sort((a,b)=>cmpEs(a.nm,b.nm));
+      const found=searchList(all,x=>x.nm+' '+(x.m?clubName(x.m.club):''),S.partQ); const LIM=10; const showAll=S.partAll||!!norm(S.partQ)||PF!=='all'; const shown=showAll?found:found.slice(0,LIM);
+      return (c.parts.length?(PF!=='all'&&!all.length?`<p class="hint">${PF==='debe'?'Nadie debe esta actividad. ¡Todas pagaron!':'Todavía nadie ha pagado.'}</p>`:'')+approxNote(found,S.partQ)+`<div class="list">${shown.map(({p,m})=>`<div class="row"><div>${m?`<button class="link" data-open="${esc(m.id)}">${esc(full(m))}</button><div class="muted" style="font-size:.82rem">${esc(clubName(m.club))}</div>`:`<b>${esc(p.nombre)}</b><div class="muted" style="font-size:.82rem">No está en los clubes</div>`}</div>
       <span style="display:flex;gap:8px;align-items:center"><span class="seg"><button class="pend" data-partpay="${esc(p.id)}" data-v="0" aria-pressed="${!p.pagado}"${dis}>Debe</button><button class="done" data-partpay="${esc(p.id)}" data-v="1" aria-pressed="${!!p.pagado}"${dis}>Pagó</button></span>${ro?'':`<button class="btn small danger" data-delpart="${esc(p.id)}" aria-label="Quitar a ${esc(m?full(m):p.nombre)}">✕</button>`}</span></div>`).join('')}</div>`
-        +(!norm(S.partQ)&&found.length>LIM?`<button class="btn" style="margin-top:10px;width:100%" data-partall="1">${S.partAll?'Mostrar solo las primeras 10':`Mostrar las ${found.length-LIM} restantes`}</button>`:'')
+        +(!norm(S.partQ)&&PF==='all'&&found.length>LIM?`<button class="btn" style="margin-top:10px;width:100%" data-partall="1">${S.partAll?'Mostrar solo las primeras 10':`Mostrar las ${found.length-LIM} restantes`}</button>`:'')
         :`<p class="hint">Todavía no hay inscritas. Escribe el nombre arriba para agregarlas.</p>`);})()}
   </section>
   </div>`;
@@ -1405,7 +1417,7 @@ function openActivity(id){
     <form id="a-form" class="form" novalidate>
       <label class="full" id="lb-an">Nombre de la actividad *<input type="text" id="a-nombre" value="${esc(a?a.nombre:'')}" placeholder="Ej. Pintar calabazas"></label>
       <div class="full"><div style="font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:4px">Estado</div>
-        <div class="radio"><label><input type="radio" name="aest" value="futura"${(a?isFut(a):true)?' checked':''}> Futura <small>solo calcular</small></label><label><input type="radio" name="aest" value="marcha"${(a?!isFut(a):false)?' checked':''}> En marcha <small>cuenta en Pagos</small></label></div></div>
+        <div class="radio"><label><input type="radio" name="aest" value="futura"${(a?isFut(a):true)?' checked':''}> Futura <small>solo calcular</small></label><label><input type="radio" name="aest" value="marcha"${(a?!isFut(a)&&!isFin(a):false)?' checked':''}> En marcha <small>cuenta en Pagos</small></label><label><input type="radio" name="aest" value="finalizada"${(a?isFin(a):false)?' checked':''}> Finalizada <small>registro</small></label></div></div>
       <label id="lb-af">Fecha<input type="date" id="a-fecha" value="${esc(a?a.fecha:'')}"></label>
       <label>Cobro por chica ($)<input type="text" inputmode="decimal" autocomplete="off" id="a-precio" min="0" step="0.5" value="${esc(a?a.precio??'':'')}" placeholder="Lo puedes definir después"></label>
       <p class="formerr full" id="a-err" hidden></p>
@@ -1424,7 +1436,7 @@ function openActivity(id){
       $('#a-form').onsubmit=e=>{
         e.preventDefault();
         const nombre=$('#a-nombre').value.trim(), fecha=$('#a-fecha').value, pr=$('#a-precio').value;
-        const estado=document.querySelector('input[name=aest]:checked').value, needF=estado==='marcha';
+        const estado=document.querySelector('input[name=aest]:checked').value, needF=estado!=='futura';
         $('#lb-an').classList.toggle('err',!nombre);$('#lb-af').classList.toggle('err',needF&&!fecha);
         if(!nombre||(needF&&!fecha)){const er=$('#a-err');er.hidden=false;er.textContent='Falta completar: '+[!nombre&&'Nombre',needF&&!fecha&&'Fecha (necesaria para ponerla en marcha)'].filter(Boolean).join(', ')+'.';return;}
         const precio=pr===''?null:num(pr);
@@ -1689,10 +1701,11 @@ document.addEventListener('click',e=>{
   if(d.viewclub&&isIt(clubById(d.viewclub))){S.section='it';S.itClub=d.viewclub;S.itQ='';S.itTab='chicas';render();window.scrollTo({top:0});return;}
   if(d.viewclub){S.section='clubes';S.club=d.viewclub;S.q='';S.memb='';setTab('chicas');return;}
   if(d.partall){S.partAll=!S.partAll;render();return;}
+  if(d.partf){S.partF=d.partf;render();return;}
   if(d.pickpart){addPartMember(d.pickpart);return;}
   if(d.pickit){const x=S.allMembers.find(z=>z.id===d.pickit);if(x){$('#i-q').value=full(x)+' · '+(x.club?clubLabel(x.club):'The It Club');$('#i-q').dataset.mid=x.id;$('#i-sug').hidden=true;}return;}
-  if(d.openact){S.partQ='';S.partAll=false;S.actId=d.openact;S.section='actividades';render();window.scrollTo({top:0});return;}
-  if(d.actst){const a=curAct();if(a){if(d.actst==='marcha'&&!a.fecha){toast('Ponle una fecha antes de ponerla en marcha');openActivity(a.id);return;}saveAct(a.id,{estado:d.actst},true);toast(d.actst==='marcha'?'Actividad en marcha: ya cuenta en Pagos':'Actividad marcada como futura');}return;}
+  if(d.openact){S.partQ='';S.partAll=false;S.partF='all';S.actId=d.openact;S.section='actividades';render();window.scrollTo({top:0});return;}
+  if(d.actst){const a=curAct();if(a){if(d.actst!=='futura'&&!a.fecha){toast('Ponle una fecha primero');openActivity(a.id);return;}saveAct(a.id,{estado:d.actst},true);toast(d.actst==='marcha'?'Actividad en marcha: ya cuenta en Pagos':d.actst==='finalizada'?'Actividad finalizada: quedó en el registro':'Actividad marcada como futura');}return;}
   if(d.actback){S.actId=null;render();return;}
   if(d.editact){openActivity(d.editact);return;}
   if(d.delitem){const a=curAct();if(a)saveAct(a.id,{items:(a.items||[]).filter(i=>i.id!==d.delitem)},true);return;}
