@@ -428,6 +428,18 @@ input[data-climonto]{max-width:120px;margin-left:auto;display:block}
 .ev-tag{font-family:var(--f-label);letter-spacing:.1em;font-size:.9rem;color:var(--accent)}
 .ev-t{font-size:1rem}
 .ev-sub{font-size:.88rem;overflow-wrap:anywhere}
+/* subpestañas del calendario */
+.subtabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px;padding-bottom:2px}
+.subtabs button{flex:1 1 auto;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:8px 10px;font:600 .9rem var(--f-body);cursor:pointer;min-height:40px;white-space:nowrap}
+.subtabs button small{font-family:var(--f-label);font-size:.95rem;letter-spacing:.06em;margin-left:4px}
+.subtabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.crow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.crow:last-child{border-bottom:0}
+.cinfo{display:flex;flex-direction:column;gap:3px;min-width:0}
+.cev{font-weight:500;font-size:.88rem;color:var(--muted)}
+.clubh2{background:var(--clubbar);color:var(--clubbar-ink);font-family:var(--f-label);letter-spacing:.08em;font-size:1.05rem;padding:6px 10px;border-radius:2px;margin:6px 0 2px}
+.clubh2:first-child{margin-top:0}
+.clubh2 small{font-size:.95rem;opacity:.8;margin-left:4px}
 /* ===== App móvil (PWA) ===== */
 html{-webkit-text-size-adjust:100%;background:var(--bg)}
 body{margin:0;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
@@ -529,7 +541,7 @@ const CUR_Y=now.getFullYear(), CUR_M=now.getMonth()+1;
 const curKey=`${CUR_Y}-${String(CUR_M).padStart(2,'0')}`;
 const S={db:null,ready:{clubs:false,members:false},canWrite:true,
   clubs:[],members:[],books:{},movs:[],config:{precioLibro:15},
-  section:'clubes',scope:'propios',payTab:'general',acts:[],actId:null,tab:'resumen',year:CUR_Y,club:'',gbm:'',itTab:'resumen',tasas:[],abonos:[],vincci:[],eventos:[],calY:CUR_Y,calM:CUR_M,calDay:'',vinDraft:{},abDraft:{},partQ:'',partAll:false,fxOpen:new Set(),fxQ:'',itClub:'',itQ:'',itMommy:'',itDebt:false,allMembers:[],q:'',onlyDebt:false,bookMonth:CUR_M,finMonth:CUR_M,memb:''};
+  section:'clubes',scope:'propios',payTab:'general',acts:[],actId:null,tab:'resumen',year:CUR_Y,club:'',gbm:'',itTab:'resumen',tasas:[],abonos:[],vincci:[],eventos:[],calY:CUR_Y,calM:CUR_M,calDay:'',calTab:'cal',vinDraft:{},abDraft:{},partQ:'',partAll:false,fxOpen:new Set(),fxQ:'',itClub:'',itQ:'',itMommy:'',itDebt:false,allMembers:[],q:'',onlyDebt:false,bookMonth:CUR_M,finMonth:CUR_M,memb:''};
 try{const t=localStorage.getItem('cl-tab'); if(t) S.tab=({pagos:'cuotas',finanzas:'resumen'})[t]||t; const sc=localStorage.getItem('cl-sec'); if(sc) S.section=sc; const sp=localStorage.getItem('cl-scope'); if(sp) S.scope=sp; const pt=localStorage.getItem('cl-ptab'); if(pt) S.payTab=pt; const itt=localStorage.getItem('cl-ittab'); if(itt) S.itTab=itt; if(S.tab==='aportes'){S.section='pagos';S.payTab='bm';S.tab='resumen';}}catch(e){}
 
 const $=s=>document.querySelector(s);
@@ -2208,6 +2220,34 @@ function evCard(e,showDate){
       <span class="ev-sub">📍 ${e.lugar?esc(e.lugar):'<i>Sitio por definir</i>'}</span>${e.notas?`<span class="ev-sub muted">${esc(e.notas)}</span>`:''}</span></button>`;
 }
 function vCalendario(){
+  const tabs=`<div class="subtabs" role="tablist">${[['cal','Calendario'],['coord','Coordinados'],['pend','Por coordinar']].map(([k,l])=>`<button role="tab" data-caltab="${k}" aria-selected="${S.calTab===k}">${l}${k!=='cal'?` <small>${coordInfo(S.calY,S.calM)[k==='coord'?'coord':'pend'].length}</small>`:''}</button>`).join('')}</div>`;
+  if(S.calTab==='coord'||S.calTab==='pend') return tabs+vCoord(S.calTab);
+  return tabs+vCalMain();
+}
+function coordInfo(y,m){
+  const mk=mkey(y,m), clubs=[...scopeClubs(),...itClubList()], evs=S.eventos.filter(e=>(e.fecha||'').slice(0,7)===mk&&e.club).sort(evSort);
+  const coord=[],pend=[];
+  for(const c of clubs){const es=evs.filter(e=>e.club===c.id);(es.length?coord:pend).push({c,es});}
+  return {mk,coord,pend,total:clubs.length};
+}
+function vCoord(which){
+  const I=coordInfo(S.calY,S.calM), list=I[which], mn=MES[S.calM-1];
+  const grp=(arr,it)=>arr.filter(r=>isIt(r.c)===it);
+  const row=r=>{const k=isIt(r.c), lbl=k?itLabel(r.c.id):clubLabel(r.c.id);
+    return which==='coord'?`<div class="crow ok"><div class="cinfo"><b>${esc(lbl)}</b>${r.es.map(e=>`<button class="link cev" data-evedit="${esc(e.id)}">${e.fecha?esc(+e.fecha.slice(8,10)+' '+MES3[+e.fecha.slice(5,7)-1]):''}${e.hora?' · '+esc(fmtHora(e.hora)):''} · 📍 ${e.lugar?esc(e.lugar):'sitio por definir'}</button>`).join('')}</div><span class="pill ok">Coordinado</span></div>`
+      :`<div class="crow"><div class="cinfo"><b>${esc(lbl)}</b><span class="muted" style="font-size:.85rem">Sin reunión en ${mn.toLowerCase()}</span></div>${S.canWrite?`<button class="btn small primary" data-evclub="${esc(r.c.id)}">+ Agendar</button>`:''}</div>`;};
+  const sec=(t,arr)=>arr.length?`<div class="clubh2">${t} <small>${arr.length}</small></div>${arr.map(row).join('')}`:'';
+  const pct=I.total?Math.round(I.coord.length/I.total*100):0;
+  return `
+  <section class="panel cal" style="margin-bottom:14px">
+    <div class="calhead"><button class="btn small" data-calnav="-1" aria-label="Mes anterior">‹</button><h2>${mn} ${S.calY}</h2><button class="btn small" data-calnav="1" aria-label="Mes siguiente">›</button>${I.mk!==curKey?'<button class="btn small" data-calnav="0">Hoy</button>':''}</div>
+    <div class="grid kpis"><div class="kpi src"><span class="lbl">Coordinados</span><span class="val">${I.coord.length} <small class="muted" style="font-size:1rem">de ${I.total}</small></span>${bar(I.coord.length,I.total)}<span class="sub">${pct}% de los clubes ya tienen reunión en ${mn.toLowerCase()}</span>${I.pend.length?`<span class="sub falta">Faltan por coordinar: <b>${I.pend.length}</b></span>`:'<span class="sub falta ok">¡Todos coordinados!</span>'}</div></div>
+  </section>
+  ${list.length?`<section class="panel">${sec('The Book Club',grp(list,false))}${sec('The It Club',grp(list,true))}</section>`
+    :`<div class="panel empty">${which==='coord'?`Todavía ningún club tiene reunión en ${mn.toLowerCase()}.`:`Todos los clubes tienen reunión en ${mn.toLowerCase()}. 🎉`}</div>`}
+  <p class="hint" style="margin-top:8px">Un club cuenta como coordinado cuando tiene al menos una reunión agendada en el mes que estás viendo.</p>`;
+}
+function vCalMain(){
   const y=S.calY, m=S.calM, mk=mkey(y,m), today=todayStr();
   const evs=[...S.eventos].sort(evSort), inMonth=evs.filter(e=>(e.fecha||'').slice(0,7)===mk);
   const byDay={}; for(const e of inMonth){(byDay[e.fecha]||(byDay[e.fecha]=[])).push(e);}
@@ -2229,9 +2269,9 @@ function vCalendario(){
     <span style="display:flex;gap:8px;align-items:center">${S.calDay?'<button class="btn small" data-calday="">Ver todo el mes</button>':''}<span class="muted">${list.length} ${list.length===1?'reunión':'reuniones'}</span></span></div>
   ${list.length?`<div class="evlist">${list.map(e=>evCard(e,!S.calDay)).join('')}</div>`:`<div class="panel empty">${S.calDay?'No hay nada este día.':'No hay reuniones este mes.'}${S.canWrite?` <button class="btn small primary" data-evnew="${esc(S.calDay||'')}">+ Agregar</button>`:''}</div>`}`;
 }
-function openEvento(id,fecha){
+function openEvento(id,fecha,club){
   const e=id?S.eventos.find(x=>x.id===id):null; if(id&&!e)return;
-  const v=e||{club:'',titulo:'',fecha:fecha||S.calDay||(mkey(S.calY,S.calM)===curKey?todayStr():mkey(S.calY,S.calM)+'-01'),hora:'',lugar:'',notas:''};
+  const v=e||{club:club||'',titulo:'',fecha:fecha||S.calDay||(mkey(S.calY,S.calM)===curKey?todayStr():mkey(S.calY,S.calM)+'-01'),hora:'',lugar:'',notas:''};
   const book=scopeClubs(), it=itClubList();
   const opt=c=>`<option value="${esc(c.id)}"${c.id===v.club?' selected':''}>${esc(isIt(c)?itLabel(c.id):clubLabel(c.id))}</option>`;
   const lugares=[...new Set(S.eventos.map(x=>(x.lugar||'').trim()).filter(Boolean))].sort(cmpEs);
@@ -2268,6 +2308,8 @@ document.addEventListener('click',ev=>{
   if(d.calnav!==undefined){const n=+d.calnav; if(n===0){S.calY=CUR_Y;S.calM=CUR_M;S.calDay=todayStr();}else{let m=S.calM+n,y=S.calY;if(m<1){m=12;y--;}if(m>12){m=1;y++;}S.calY=y;S.calM=m;S.calDay='';} render(); return;}
   if(d.calday!==undefined){S.calDay=(d.calday&&d.calday===S.calDay)?'':d.calday; render(); return;}
   if(d.evedit){openEvento(d.evedit);return;}
+  if(d.caltab){S.calTab=d.caltab;render();return;}
+  if(d.evclub){openEvento(null,null,d.evclub);return;}
   if(d.evnew!==undefined){openEvento(null,d.evnew||null);return;}
 });
 
