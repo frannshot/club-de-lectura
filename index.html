@@ -440,6 +440,7 @@ input[data-climonto]{max-width:120px;margin-left:auto;display:block}
 .clubh2{background:var(--clubbar);color:var(--clubbar-ink);font-family:var(--f-label);letter-spacing:.08em;font-size:1.05rem;padding:6px 10px;border-radius:2px;margin:6px 0 2px}
 .clubh2:first-child{margin-top:0}
 .clubh2 small{font-size:.95rem;opacity:.8;margin-left:4px}
+.ev-cuenta{font-size:.82rem;font-weight:700;color:var(--warn)}
 /* ===== App móvil (PWA) ===== */
 html{-webkit-text-size-adjust:100%;background:var(--bg)}
 body{margin:0;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
@@ -2216,7 +2217,7 @@ function evCard(e,showDate){
   const k=evClub(e), d=e.fecha?new Date(+e.fecha.slice(0,4),+e.fecha.slice(5,7)-1,+e.fecha.slice(8,10)):null, past=(e.fecha||'')<todayStr();
   return `<button class="ev${past?' past':''}${k?(k.it?' ev-it':' ev-book'):' ev-otro'}" data-evedit="${esc(e.id)}">
     <span class="ev-when">${showDate&&d?`<b>${d.getDate()} ${MES3[d.getMonth()]}</b><small>${DIAS_L[d.getDay()]}</small>`:''}<span class="ev-h">${e.hora?esc(fmtHora(e.hora)):'Sin hora'}</span></span>
-    <span class="ev-body"><span class="ev-tag">${k?(k.it?'The It Club':'The Book Club'):'Evento'}</span><b class="ev-t">${esc(k?k.label:(e.titulo||'Evento'))}</b>${k&&e.titulo?`<span class="ev-sub">${esc(e.titulo)}</span>`:''}
+    <span class="ev-body"><span class="ev-tag">${k?(k.it?'The It Club':'The Book Club'):'Evento'}</span><b class="ev-t">${esc(k?k.label:(e.titulo||'Evento'))}</b>${k&&e.titulo?`<span class="ev-sub">${esc(e.titulo)}</span>`:''}${k&&e.mesCuenta&&e.mesCuenta!==(e.fecha||'').slice(0,7)?`<span class="ev-cuenta">Cuenta como reunión de ${esc(fmtK(e.mesCuenta))}</span>`:''}
       <span class="ev-sub">📍 ${e.lugar?esc(e.lugar):'<i>Sitio por definir</i>'}</span>${e.notas?`<span class="ev-sub muted">${esc(e.notas)}</span>`:''}</span></button>`;
 }
 function vCalendario(){
@@ -2224,8 +2225,10 @@ function vCalendario(){
   if(S.calTab==='coord'||S.calTab==='pend') return tabs+vCoord(S.calTab);
   return tabs+vCalMain();
 }
+const evMes=e=>e.mesCuenta||(e.fecha||'').slice(0,7);
+const shiftK=(k,n)=>{let y=+k.slice(0,4),m=+k.slice(5,7)+n;while(m<1){m+=12;y--;}while(m>12){m-=12;y++;}return mkey(y,m);};
 function coordInfo(y,m){
-  const mk=mkey(y,m), clubs=[...scopeClubs(),...itClubList()], evs=S.eventos.filter(e=>(e.fecha||'').slice(0,7)===mk&&e.club).sort(evSort);
+  const mk=mkey(y,m), clubs=[...scopeClubs(),...itClubList()], evs=S.eventos.filter(e=>evMes(e)===mk&&e.club).sort(evSort);
   const coord=[],pend=[];
   for(const c of clubs){const es=evs.filter(e=>e.club===c.id);(es.length?coord:pend).push({c,es});}
   return {mk,coord,pend,total:clubs.length};
@@ -2234,7 +2237,7 @@ function vCoord(which){
   const I=coordInfo(S.calY,S.calM), list=I[which], mn=MES[S.calM-1];
   const grp=(arr,it)=>arr.filter(r=>isIt(r.c)===it);
   const row=r=>{const k=isIt(r.c), lbl=k?itLabel(r.c.id):clubLabel(r.c.id);
-    return which==='coord'?`<div class="crow ok"><div class="cinfo"><b>${esc(lbl)}</b>${r.es.map(e=>`<button class="link cev" data-evedit="${esc(e.id)}">${e.fecha?esc(+e.fecha.slice(8,10)+' '+MES3[+e.fecha.slice(5,7)-1]):''}${e.hora?' · '+esc(fmtHora(e.hora)):''} · 📍 ${e.lugar?esc(e.lugar):'sitio por definir'}</button>`).join('')}</div><span class="pill ok">Coordinado</span></div>`
+    return which==='coord'?`<div class="crow ok"><div class="cinfo"><b>${esc(lbl)}</b>${r.es.map(e=>`<button class="link cev" data-evedit="${esc(e.id)}">${(e.fecha||'').slice(0,7)!==I.mk?'<span class="pill warn" style="margin-right:4px">se reúne en '+esc(MES[+e.fecha.slice(5,7)-1].toLowerCase())+'</span>':''}${e.fecha?esc(+e.fecha.slice(8,10)+' '+MES3[+e.fecha.slice(5,7)-1]):''}${e.hora?' · '+esc(fmtHora(e.hora)):''} · 📍 ${e.lugar?esc(e.lugar):'sitio por definir'}</button>`).join('')}</div><span class="pill ok">Coordinado</span></div>`
       :`<div class="crow"><div class="cinfo"><b>${esc(lbl)}</b><span class="muted" style="font-size:.85rem">Sin reunión en ${mn.toLowerCase()}</span></div>${S.canWrite?`<button class="btn small primary" data-evclub="${esc(r.c.id)}">+ Agendar</button>`:''}</div>`;};
   const sec=(t,arr)=>arr.length?`<div class="clubh2">${t} <small>${arr.length}</small></div>${arr.map(row).join('')}`:'';
   const pct=I.total?Math.round(I.coord.length/I.total*100):0;
@@ -2245,7 +2248,7 @@ function vCoord(which){
   </section>
   ${list.length?`<section class="panel">${sec('The Book Club',grp(list,false))}${sec('The It Club',grp(list,true))}</section>`
     :`<div class="panel empty">${which==='coord'?`Todavía ningún club tiene reunión en ${mn.toLowerCase()}.`:`Todos los clubes tienen reunión en ${mn.toLowerCase()}. 🎉`}</div>`}
-  <p class="hint" style="margin-top:8px">Un club cuenta como coordinado cuando tiene al menos una reunión agendada en el mes que estás viendo.</p>`;
+  <p class="hint" style="margin-top:8px">Un club cuenta como coordinado cuando tiene al menos una reunión que cuenta para ese mes. Si una reunión se hace en otro mes pero cuenta para este (por ejemplo, la de octubre que se hace en noviembre), aparece aquí con la etiqueta “se reúne en…”.</p>`;
 }
 function vCalMain(){
   const y=S.calY, m=S.calM, mk=mkey(y,m), today=todayStr();
@@ -2282,20 +2285,27 @@ function openEvento(id,fecha,club){
       <label class="full" id="lb-et"><span id="e-tl">${v.club?'Título (opcional)':'Nombre del evento *'}</span><input type="text" id="e-tit" value="${esc(v.titulo||'')}" placeholder="Ej. Reunión de noviembre"></label>
       <label id="lb-ef">Fecha *<input type="date" id="e-fecha" value="${esc(v.fecha||'')}"></label>
       <label>Hora<input type="time" id="e-hora" value="${esc(v.hora||'')}"></label>
+      <label class="full" id="lb-emc">Cuenta como reunión del mes de<select id="e-mc"></select><small class="muted" style="font-weight:500">Por defecto, el mes de la fecha. Cámbialo si se coordinó para otro mes.</small></label>
       <label class="full">Sitio de la reunión<input type="text" id="e-lugar" list="e-lugares" value="${esc(v.lugar||'')}" placeholder="Ej. Café del centro"><datalist id="e-lugares">${lugares.map(l=>`<option value="${esc(l)}"></option>`).join('')}</datalist></label>
       <label class="full">Notas (opcional)<input type="text" id="e-notas" value="${esc(v.notas||'')}" placeholder="Ej. Llevar marcapáginas"></label>
       <p class="formerr full" id="e-err" hidden></p>
       <div class="foot full">${e?'<button class="btn danger" type="button" id="e-del">Eliminar</button>':''}<div class="r"><button class="btn" type="button" id="e-cancel">Cancelar</button><button class="btn primary" type="submit">${e?'Guardar':'Agregar'}</button></div></div>
     </form>`,()=>{
       $('#e-close').onclick=closeModal;$('#e-cancel').onclick=closeModal;
-      $('#e-club').onchange=()=>{$('#e-tl').textContent=$('#e-club').value?'Título (opcional)':'Nombre del evento *';};
+      const fillMc=keep=>{const f=$('#e-fecha').value;const sel=$('#e-mc');if(!f){sel.innerHTML='<option value="">Elige la fecha primero</option>';return;}const base=f.slice(0,7);
+        const opts=[-2,-1,0,1].map(n=>shiftK(base,n));const cur=keep&&opts.includes(keep)?keep:base;
+        sel.innerHTML=opts.map(k=>`<option value="${k}"${k===cur?' selected':''}>${MES[+k.slice(5,7)-1]} ${k.slice(0,4)}${k===base?' (mes de la fecha)':''}</option>`).join('');};
+      const syncMc=()=>{$('#lb-emc').hidden=!$('#e-club').value;};
+      fillMc(v.mesCuenta||''); syncMc();
+      $('#e-fecha').addEventListener('change',()=>fillMc($('#e-mc').value));
+      $('#e-club').onchange=()=>{$('#e-tl').textContent=$('#e-club').value?'Título (opcional)':'Nombre del evento *';syncMc();};
       const del=$('#e-del'); if(del) del.onclick=()=>{if(!del.classList.contains('armed')){del.classList.add('armed');del.textContent='Confirmar: eliminar';return;}
         closeModal(); S.eventos=S.eventos.filter(x=>x.id!==e.id); render(); write('eventos/'+e.id,()=>S.db.doc('eventos/'+e.id).delete()).then(()=>toast('Reunión eliminada')).catch(()=>{});};
       $('#e-form').onsubmit=ev=>{ev.preventDefault();
         const club=$('#e-club').value, titulo=$('#e-tit').value.trim(), fecha=$('#e-fecha').value;
         $('#lb-ef').classList.toggle('err',!fecha); $('#lb-et').classList.toggle('err',!club&&!titulo);
         if(!fecha||(!club&&!titulo)){const er=$('#e-err');er.hidden=false;er.textContent=!fecha?'Elige la fecha.':'Elige un club o escribe el nombre del evento.';return;}
-        const body={club,titulo,fecha,hora:$('#e-hora').value,lugar:$('#e-lugar').value.trim(),notas:$('#e-notas').value.trim()};
+        const mc=club?$('#e-mc').value:''; const body={club,titulo,fecha,hora:$('#e-hora').value,lugar:$('#e-lugar').value.trim(),notas:$('#e-notas').value.trim(),mesCuenta:mc&&mc!==fecha.slice(0,7)?mc:null};
         const nid=e?e.id:S.db.collection('eventos').doc().id; if(!e)body.creado=new Date().toISOString();
         S.eventos=[...S.eventos.filter(x=>x.id!==nid),{id:nid,...(e||{}),...body}]; S.calY=+fecha.slice(0,4); S.calM=+fecha.slice(5,7); closeModal(); render();
         write('eventos/'+nid,()=>e?S.db.doc('eventos/'+nid).update(body):S.db.doc('eventos/'+nid).set(body)).then(()=>toast(e?'Reunión actualizada':'Reunión agregada')).catch(()=>{});
