@@ -2,7 +2,7 @@
    Todo se guarda solo en este teléfono (localStorage). No hay datos dentro del código. */
 (function(){
   const PREFIX='cl-db:';
-  const COLS=['clubs','members','books','activities','movs','tasas','abonos','vincci','config'];
+  const COLS=['clubs','members','books','activities','movs','tasas','abonos','vincci','eventos','config'];
   const store={};
   for(const c of COLS){
     try{store[c]=JSON.parse(localStorage.getItem(PREFIX+c)||'{}')||{};}catch(e){store[c]={};}

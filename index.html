@@ -398,6 +398,36 @@ input[data-climonto]{max-width:120px;margin-left:auto;display:block}
 .act-card.fut .stub{background:#D8B25C;color:#2A1F1B;border-right-color:rgb(42 31 27 / .45)}
 .act-card.fin .stub{background:#B23A1E;color:#FBEDE8;border-right-color:rgb(251 237 232 / .55)}
 .act-card .stub .y{opacity:.85}
+/* calendario */
+.calhead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.calhead h2{flex:1;text-align:center}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.calgrid .dw{text-align:center;font-family:var(--f-label);letter-spacing:.08em;color:var(--muted);font-size:.95rem;padding:2px 0}
+.cd{min-height:48px;border:1px solid var(--line);border-radius:6px;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;padding:5px 0 4px;cursor:pointer;color:var(--ink);font:inherit}
+.cd.empty{border:0;background:transparent;cursor:default}
+.cd .n{font-variant-numeric:tabular-nums;font-weight:600;font-size:.95rem}
+.cd.has{background:var(--sunk)}
+.cd.today{border-color:var(--accent);border-width:2px}
+.cd.today .n{color:var(--accent)}
+.cd.sel{background:var(--accent);border-color:var(--accent)}
+.cd.sel .n{color:var(--accent-ink)}
+.dots{display:flex;gap:3px;min-height:7px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.dot.book{background:#D8B25C}.dot.it{background:#E39AAA}.dot.otro{background:#7BB0D8}
+.legend .dot{margin-right:4px;vertical-align:middle}
+.evlist{display:flex;flex-direction:column;gap:8px}
+.ev{display:flex;gap:12px;align-items:stretch;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-left:5px solid #D8B25C;border-radius:6px;padding:10px 12px;cursor:pointer;color:var(--ink);font:inherit}
+.ev.ev-it{border-left-color:#E39AAA}.ev.ev-otro{border-left-color:#7BB0D8}
+.ev.past{opacity:.6}
+.ev:hover{border-color:var(--accent)}
+.ev-when{flex:none;width:76px;display:flex;flex-direction:column;justify-content:center;gap:1px}
+.ev-when b{font-family:var(--f-display);font-weight:400;font-size:1.15rem;line-height:1.1}
+.ev-when small{color:var(--muted);font-size:.78rem;text-transform:capitalize}
+.ev-h{font-weight:700;font-size:.92rem;font-variant-numeric:tabular-nums}
+.ev-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ev-tag{font-family:var(--f-label);letter-spacing:.1em;font-size:.9rem;color:var(--accent)}
+.ev-t{font-size:1rem}
+.ev-sub{font-size:.88rem;overflow-wrap:anywhere}
 /* ===== App móvil (PWA) ===== */
 html{-webkit-text-size-adjust:100%;background:var(--bg)}
 body{margin:0;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
@@ -446,6 +476,7 @@ input,select,textarea{font-size:16px!important}
       <button data-sec="it"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M5 5l2 2M19 5l-2 2"/></svg>The It Club</button>
       <button data-sec="actividades"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg>Actividades</button>
       <button data-sec="pagos"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M16 15h2"/><path d="M6 6V4.5A1.5 1.5 0 0 1 7.5 3H17"/></svg>Pagos</button>
+      <button data-sec="calendario"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17h2"/></svg>Calendario</button>
       <button data-sec="respaldo"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Respaldo</button>
     </nav>
   </aside>
@@ -498,7 +529,7 @@ const CUR_Y=now.getFullYear(), CUR_M=now.getMonth()+1;
 const curKey=`${CUR_Y}-${String(CUR_M).padStart(2,'0')}`;
 const S={db:null,ready:{clubs:false,members:false},canWrite:true,
   clubs:[],members:[],books:{},movs:[],config:{precioLibro:15},
-  section:'clubes',scope:'propios',payTab:'general',acts:[],actId:null,tab:'resumen',year:CUR_Y,club:'',gbm:'',itTab:'resumen',tasas:[],abonos:[],vincci:[],vinDraft:{},abDraft:{},partQ:'',partAll:false,fxOpen:new Set(),fxQ:'',itClub:'',itQ:'',itMommy:'',itDebt:false,allMembers:[],q:'',onlyDebt:false,bookMonth:CUR_M,finMonth:CUR_M,memb:''};
+  section:'clubes',scope:'propios',payTab:'general',acts:[],actId:null,tab:'resumen',year:CUR_Y,club:'',gbm:'',itTab:'resumen',tasas:[],abonos:[],vincci:[],eventos:[],calY:CUR_Y,calM:CUR_M,calDay:'',vinDraft:{},abDraft:{},partQ:'',partAll:false,fxOpen:new Set(),fxQ:'',itClub:'',itQ:'',itMommy:'',itDebt:false,allMembers:[],q:'',onlyDebt:false,bookMonth:CUR_M,finMonth:CUR_M,memb:''};
 try{const t=localStorage.getItem('cl-tab'); if(t) S.tab=({pagos:'cuotas',finanzas:'resumen'})[t]||t; const sc=localStorage.getItem('cl-sec'); if(sc) S.section=sc; const sp=localStorage.getItem('cl-scope'); if(sp) S.scope=sp; const pt=localStorage.getItem('cl-ptab'); if(pt) S.payTab=pt; const itt=localStorage.getItem('cl-ittab'); if(itt) S.itTab=itt; if(S.tab==='aportes'){S.section='pagos';S.payTab='bm';S.tab='resumen';}}catch(e){}
 
 const $=s=>document.querySelector(s);
@@ -685,7 +716,7 @@ $('#paytabs').addEventListener('click',e=>{const b=e.target.closest('button[data
 $('#scope').addEventListener('click',e=>{const b=e.target.closest('button[data-scope]');if(!b)return;S.scope=b.dataset.scope;S.club='';try{localStorage.setItem('cl-scope',S.scope);}catch(e){} render();});
 $('#sidenav').addEventListener('click',e=>{const b=e.target.closest('button[data-sec]');if(!b)return; if(b.dataset.sec==='actividades'&&S.section==='actividades')S.actId=null; setSection(b.dataset.sec);});
 $('#btn-pdf').addEventListener('click',()=>makePdf(S.year,S.finMonth));
-$('#btn-new').addEventListener('click',()=>{ if(S.section==='actividades') openActivity(null); else if(S.section==='it') openItMember(null); else openMember(null); });
+$('#btn-new').addEventListener('click',()=>{ if(S.section==='calendario') openEvento(null); else if(S.section==='actividades') openActivity(null); else if(S.section==='it') openItMember(null); else openMember(null); });
 $('#ittabs').addEventListener('click',e=>{const b=e.target.closest('button[data-ittab]');if(!b)return;S.itTab=b.dataset.ittab;try{localStorage.setItem('cl-ittab',S.itTab);}catch(e){} render();window.scrollTo({top:0});});
 
 function render(){
@@ -702,9 +733,9 @@ function render(){
   bn.hidden=S.section==='pagos'||S.section==='respaldo';
   const bp=$('#btn-pdf'); bp.hidden=S.section!=='pagos'; bp.disabled=!S.db||!S.ready.clubs||!S.ready.members||S.pdfBusy;
   $('#btn-pdf-l').textContent=S.pdfBusy?'Generando…':`Generar PDF · ${MES[S.finMonth-1]} ${S.year}`;
-  bn.textContent=S.section==='actividades'?'+ Nueva actividad':S.section==='it'?'+ Inscribir chica':'+ Registrar chica';
+  bn.textContent=S.section==='calendario'?'+ Nueva reunión':S.section==='actividades'?'+ Nueva actividad':S.section==='it'?'+ Inscribir chica':'+ Registrar chica';
   bn.disabled=!S.db||!S.canWrite||(S.section==='clubes'&&!scopeClubs().length);
-  $('#sec-title').textContent={clubes:'The Book Club',it:'The It Club',actividades:'Actividades',pagos:'Pagos',respaldo:'Respaldo'}[S.section]||'Club de Lectura';
+  $('#sec-title').textContent={clubes:'The Book Club',it:'The It Club',actividades:'Actividades',pagos:'Pagos',respaldo:'Respaldo',calendario:'Calendario'}[S.section]||'Club de Lectura';
   if(!S.db){return;}
   if(!S.ready.clubs||!S.ready.members){ $('#view').innerHTML='<div class="status">Cargando datos del club…</div>'; return; }
   const total=S.members.length;
@@ -714,10 +745,12 @@ function render(){
     :S.section==='actividades'?`${S.acts.length} ${S.acts.length===1?'actividad':'actividades'} · presupuestos y cobros`
     :S.section==='it'?`${new Set(itMems().map(r=>r.m.id)).size} chicas en ${itClubList().length} clubes · ${mommies().length} mommies · ${MES[CUR_M-1]} ${CUR_Y}`
     :S.section==='respaldo'?'Tus datos viven solo en este teléfono'
+    :S.section==='calendario'?`${S.eventos.filter(e=>(e.fecha||'')>=todayStr()).length} próximas reuniones y eventos`
     :'Todo el dinero: The Book Club, The It Club, actividades y Vincci';
   const v=$('#view');
   let fn;
   if(S.section==='respaldo') fn=vRespaldo;
+  else if(S.section==='calendario') fn=vCalendario;
   else if(S.section==='actividades') fn=vActividades;
   else if(S.section==='pagos') fn=vPagosGlobal;
   else if(S.section==='it') fn={resumen:vItResumen,chicas:vItChicas,cuotas:vItCuotas,clubes:vItClubes}[S.itTab]||vItResumen;
@@ -2160,6 +2193,84 @@ async function shareFile(file,title){
   const url=URL.createObjectURL(file); const a=document.createElement('a'); a.href=url; a.download=file.name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),60000); toast('Archivo listo: '+file.name); return true;
 }
+/* ---------- Calendario ---------- */
+const DIAS=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+const DIAS_L=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+function fmtHora(h){if(!h)return '';const [H,M]=h.split(':').map(Number);const ap=H<12?'am':'pm';const h12=H%12||12;return `${h12}:${String(M).padStart(2,'0')} ${ap}`;}
+function evClub(e){const c=e.club&&clubById(e.club);if(!c)return null;return {c,it:isIt(c),label:isIt(c)?itLabel(c.id):clubLabel(c.id)};}
+function evTitle(e){const k=evClub(e);return k?k.c.nombre:(e.titulo||'Evento');}
+const evSort=(a,b)=>(a.fecha||'').localeCompare(b.fecha||'')||(a.hora||'99').localeCompare(b.hora||'99')||cmpEs(evTitle(a),evTitle(b));
+function evCard(e,showDate){
+  const k=evClub(e), d=e.fecha?new Date(+e.fecha.slice(0,4),+e.fecha.slice(5,7)-1,+e.fecha.slice(8,10)):null, past=(e.fecha||'')<todayStr();
+  return `<button class="ev${past?' past':''}${k?(k.it?' ev-it':' ev-book'):' ev-otro'}" data-evedit="${esc(e.id)}">
+    <span class="ev-when">${showDate&&d?`<b>${d.getDate()} ${MES3[d.getMonth()]}</b><small>${DIAS_L[d.getDay()]}</small>`:''}<span class="ev-h">${e.hora?esc(fmtHora(e.hora)):'Sin hora'}</span></span>
+    <span class="ev-body"><span class="ev-tag">${k?(k.it?'The It Club':'The Book Club'):'Evento'}</span><b class="ev-t">${esc(k?k.label:(e.titulo||'Evento'))}</b>${k&&e.titulo?`<span class="ev-sub">${esc(e.titulo)}</span>`:''}
+      <span class="ev-sub">📍 ${e.lugar?esc(e.lugar):'<i>Sitio por definir</i>'}</span>${e.notas?`<span class="ev-sub muted">${esc(e.notas)}</span>`:''}</span></button>`;
+}
+function vCalendario(){
+  const y=S.calY, m=S.calM, mk=mkey(y,m), today=todayStr();
+  const evs=[...S.eventos].sort(evSort), inMonth=evs.filter(e=>(e.fecha||'').slice(0,7)===mk);
+  const byDay={}; for(const e of inMonth){(byDay[e.fecha]||(byDay[e.fecha]=[])).push(e);}
+  const first=new Date(y,m-1,1), lead=(first.getDay()+6)%7, days=new Date(y,m,0).getDate();
+  let cells=''; for(let i=0;i<lead;i++)cells+='<span class="cd empty"></span>';
+  for(let d=1;d<=days;d++){const f=`${mk}-${String(d).padStart(2,'0')}`,n=(byDay[f]||[]).length,its=(byDay[f]||[]).map(e=>{const k=evClub(e);return k?(k.it?'it':'book'):'otro';});
+    cells+=`<button class="cd${f===today?' today':''}${f===S.calDay?' sel':''}${n?' has':''}" data-calday="${f}" aria-label="${d} de ${MES[m-1]}${n?`, ${n} ${n===1?'reunión':'reuniones'}`:''}"><span class="n">${d}</span><span class="dots">${its.slice(0,4).map(t=>`<i class="dot ${t}"></i>`).join('')}</span></button>`;}
+  const list=S.calDay?(byDay[S.calDay]||[]):inMonth;
+  const up=evs.filter(e=>(e.fecha||'')>=today).slice(0,3);
+  const selD=S.calDay?new Date(+S.calDay.slice(0,4),+S.calDay.slice(5,7)-1,+S.calDay.slice(8,10)):null;
+  return `
+  ${up.length?`<section class="panel" style="margin-bottom:14px"><div class="sec-head" style="margin-top:0"><h2>Próximas</h2><span class="muted">${evs.filter(e=>(e.fecha||'')>=today).length} en total</span></div><div class="evlist">${up.map(e=>evCard(e,true)).join('')}</div></section>`:''}
+  <section class="panel cal">
+    <div class="calhead"><button class="btn small" data-calnav="-1" aria-label="Mes anterior">‹</button><h2>${MES[m-1]} ${y}</h2><button class="btn small" data-calnav="1" aria-label="Mes siguiente">›</button>${mk!==curKey?'<button class="btn small" data-calnav="0">Hoy</button>':''}</div>
+    <div class="calgrid">${DIAS.map(d=>`<span class="dw">${d}</span>`).join('')}${cells}</div>
+    <div class="legend" style="margin-top:10px"><span><i class="dot book"></i> The Book Club</span><span><i class="dot it"></i> The It Club</span><span><i class="dot otro"></i> Otro evento</span></div>
+  </section>
+  <div class="sec-head" style="margin-top:20px"><h2>${selD?`${DIAS_L[selD.getDay()][0].toUpperCase()+DIAS_L[selD.getDay()].slice(1)} ${selD.getDate()} de ${MES[m-1].toLowerCase()}`:`Reuniones de ${MES[m-1].toLowerCase()}`}</h2>
+    <span style="display:flex;gap:8px;align-items:center">${S.calDay?'<button class="btn small" data-calday="">Ver todo el mes</button>':''}<span class="muted">${list.length} ${list.length===1?'reunión':'reuniones'}</span></span></div>
+  ${list.length?`<div class="evlist">${list.map(e=>evCard(e,!S.calDay)).join('')}</div>`:`<div class="panel empty">${S.calDay?'No hay nada este día.':'No hay reuniones este mes.'}${S.canWrite?` <button class="btn small primary" data-evnew="${esc(S.calDay||'')}">+ Agregar</button>`:''}</div>`}`;
+}
+function openEvento(id,fecha){
+  const e=id?S.eventos.find(x=>x.id===id):null; if(id&&!e)return;
+  const v=e||{club:'',titulo:'',fecha:fecha||S.calDay||(mkey(S.calY,S.calM)===curKey?todayStr():mkey(S.calY,S.calM)+'-01'),hora:'',lugar:'',notas:''};
+  const book=scopeClubs(), it=itClubList();
+  const opt=c=>`<option value="${esc(c.id)}"${c.id===v.club?' selected':''}>${esc(isIt(c)?itLabel(c.id):clubLabel(c.id))}</option>`;
+  const lugares=[...new Set(S.eventos.map(x=>(x.lugar||'').trim()).filter(Boolean))].sort(cmpEs);
+  showModal(`
+    <div class="head"><h2>${e?'Editar reunión':'Nueva reunión'}</h2><button class="btn small" id="e-close" type="button">Cerrar</button></div>
+    <form id="e-form" class="form" novalidate>
+      <label class="full" id="lb-ec">Club<select id="e-club"><option value="">— Otro evento (sin club) —</option>${book.length?`<optgroup label="The Book Club">${book.map(opt).join('')}</optgroup>`:''}${it.length?`<optgroup label="The It Club">${it.map(opt).join('')}</optgroup>`:''}</select></label>
+      <label class="full" id="lb-et"><span id="e-tl">${v.club?'Título (opcional)':'Nombre del evento *'}</span><input type="text" id="e-tit" value="${esc(v.titulo||'')}" placeholder="Ej. Reunión de noviembre"></label>
+      <label id="lb-ef">Fecha *<input type="date" id="e-fecha" value="${esc(v.fecha||'')}"></label>
+      <label>Hora<input type="time" id="e-hora" value="${esc(v.hora||'')}"></label>
+      <label class="full">Sitio de la reunión<input type="text" id="e-lugar" list="e-lugares" value="${esc(v.lugar||'')}" placeholder="Ej. Café del centro"><datalist id="e-lugares">${lugares.map(l=>`<option value="${esc(l)}"></option>`).join('')}</datalist></label>
+      <label class="full">Notas (opcional)<input type="text" id="e-notas" value="${esc(v.notas||'')}" placeholder="Ej. Llevar marcapáginas"></label>
+      <p class="formerr full" id="e-err" hidden></p>
+      <div class="foot full">${e?'<button class="btn danger" type="button" id="e-del">Eliminar</button>':''}<div class="r"><button class="btn" type="button" id="e-cancel">Cancelar</button><button class="btn primary" type="submit">${e?'Guardar':'Agregar'}</button></div></div>
+    </form>`,()=>{
+      $('#e-close').onclick=closeModal;$('#e-cancel').onclick=closeModal;
+      $('#e-club').onchange=()=>{$('#e-tl').textContent=$('#e-club').value?'Título (opcional)':'Nombre del evento *';};
+      const del=$('#e-del'); if(del) del.onclick=()=>{if(!del.classList.contains('armed')){del.classList.add('armed');del.textContent='Confirmar: eliminar';return;}
+        closeModal(); S.eventos=S.eventos.filter(x=>x.id!==e.id); render(); write('eventos/'+e.id,()=>S.db.doc('eventos/'+e.id).delete()).then(()=>toast('Reunión eliminada')).catch(()=>{});};
+      $('#e-form').onsubmit=ev=>{ev.preventDefault();
+        const club=$('#e-club').value, titulo=$('#e-tit').value.trim(), fecha=$('#e-fecha').value;
+        $('#lb-ef').classList.toggle('err',!fecha); $('#lb-et').classList.toggle('err',!club&&!titulo);
+        if(!fecha||(!club&&!titulo)){const er=$('#e-err');er.hidden=false;er.textContent=!fecha?'Elige la fecha.':'Elige un club o escribe el nombre del evento.';return;}
+        const body={club,titulo,fecha,hora:$('#e-hora').value,lugar:$('#e-lugar').value.trim(),notas:$('#e-notas').value.trim()};
+        const nid=e?e.id:S.db.collection('eventos').doc().id; if(!e)body.creado=new Date().toISOString();
+        S.eventos=[...S.eventos.filter(x=>x.id!==nid),{id:nid,...(e||{}),...body}]; S.calY=+fecha.slice(0,4); S.calM=+fecha.slice(5,7); closeModal(); render();
+        write('eventos/'+nid,()=>e?S.db.doc('eventos/'+nid).update(body):S.db.doc('eventos/'+nid).set(body)).then(()=>toast(e?'Reunión actualizada':'Reunión agregada')).catch(()=>{});
+      };
+      setTimeout(()=>$('#e-club').focus(),30);
+    });
+}
+document.addEventListener('click',ev=>{
+  const b=ev.target.closest('button'); if(!b)return; const d=b.dataset;
+  if(d.calnav!==undefined){const n=+d.calnav; if(n===0){S.calY=CUR_Y;S.calM=CUR_M;S.calDay=todayStr();}else{let m=S.calM+n,y=S.calY;if(m<1){m=12;y--;}if(m>12){m=1;y++;}S.calY=y;S.calM=m;S.calDay='';} render(); return;}
+  if(d.calday!==undefined){S.calDay=(d.calday&&d.calday===S.calDay)?'':d.calday; render(); return;}
+  if(d.evedit){openEvento(d.evedit);return;}
+  if(d.evnew!==undefined){openEvento(null,d.evnew||null);return;}
+});
+
 /* ---------- Respaldo ---------- */
 function vRespaldo(){
   const c=LocalDB.counts(), last=(()=>{try{return localStorage.getItem('cl-last-backup')}catch(e){return null}})();
@@ -2179,7 +2290,7 @@ function vRespaldo(){
   </section>
   <section class="panel">
     <h2>En este teléfono</h2>
-    <div class="counts"><div><b>${c.members||0}</b>chicas</div><div><b>${c.clubs||0}</b>clubes</div><div><b>${c.activities||0}</b>actividades</div><div><b>${c.abonos||0}</b>abonos</div><div><b>${c.tasas||0}</b>tasas BCV</div><div><b>${c.vincci||0}</b>registros Vincci</div></div>
+    <div class="counts"><div><b>${c.members||0}</b>chicas</div><div><b>${c.clubs||0}</b>clubes</div><div><b>${c.activities||0}</b>actividades</div><div><b>${c.eventos||0}</b>reuniones y eventos</div><div><b>${c.abonos||0}</b>abonos</div><div><b>${c.tasas||0}</b>tasas BCV</div><div><b>${c.vincci||0}</b>registros Vincci</div></div>
     <p class="hint" style="margin-top:10px">Versión de la app: <span id="app-ver">${esc(window.__APPVER||'—')}</span></p>
   </section></div>`;
 }
@@ -2254,6 +2365,7 @@ render();
   db.collection('activities').onSnapshot(s=>{S.acts=s.docs.map(d=>({id:d.id,...(pendingAct[d.id]||d.data())}));render();},onErr);
   db.collection('tasas').onSnapshot(s=>{S.tasas=s.docs.map(d=>({id:d.id,...d.data()})).filter(t=>t.fecha).sort((a,b)=>b.fecha.localeCompare(a.fecha));render();},onErr);
   db.collection('abonos').onSnapshot(s=>{S.abonos=s.docs.map(d=>({id:d.id,...d.data()}));render();},onErr);
+  db.collection('eventos').onSnapshot(s=>{S.eventos=s.docs.map(d=>({id:d.id,...d.data()}));render();},onErr);
   db.collection('vincci').onSnapshot(s=>{S.vincci=s.docs.map(d=>({id:d.id,...d.data()}));render();},onErr);
   db.collection('movs').onSnapshot(s=>{S.movs=s.docs.map(d=>({id:d.id,...d.data()}));render();},onErr);
   db.doc('config/general').onSnapshot(s=>{if(s.exists){S.config={precioLibro:15,...s.data(),...(cfgPending||{})};LEADER=S.config.lider||'Yo';const p=document.getElementById('f-price');if(!p||document.activeElement!==p)render();}},onErr);
