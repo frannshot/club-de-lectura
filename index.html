@@ -487,6 +487,97 @@ input,select,textarea{font-size:16px!important}
   .topbtns .btn{flex:1 1 auto;justify-content:center}
   .overlay{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
 }
+
+/* ===== Reorganización: Hoy, Más, botón +, registrar pago, ficha ===== */
+.mobonly{display:none!important}
+header.top{position:relative}
+.iconbtn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:none}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent)}
+.iconbtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#btn-gear{position:absolute;right:0;top:2px}
+.topbtns:not(:has(.btn:not([hidden]))){display:none}
+.fab{position:fixed;right:max(22px,env(safe-area-inset-right,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:18;width:60px;height:60px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 22px rgb(0 0 0 / .3);transition:transform .15s}
+.fab svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;transition:transform .2s}
+.fab[aria-expanded="true"] svg{transform:rotate(45deg)}
+.fab-wrap{position:fixed;inset:0;z-index:17}
+.fab-back{position:absolute;inset:0;background:rgb(20 12 10 / .28)}
+.fab-menu{position:absolute;right:max(22px,env(safe-area-inset-right,0px));bottom:calc(94px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:flex-end;gap:9px}
+.fab-menu button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:11px 16px;font:600 .98rem var(--f-body);box-shadow:0 4px 14px rgb(0 0 0 / .18);cursor:pointer;white-space:nowrap}
+.fab-menu button.main{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.fab-menu button:hover{border-color:var(--accent)}
+.wrap{padding-bottom:96px}
+.mas-menu{position:fixed;z-index:19;right:max(8px,env(safe-area-inset-right,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));min-width:210px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgb(0 0 0 / .25);overflow:hidden;display:flex;flex-direction:column}
+.mas-menu[hidden]{display:none}
+.mas-menu button{display:flex;align-items:center;gap:12px;border:0;border-top:1px solid var(--sunk);background:none;padding:14px 16px;font:600 1rem var(--f-body);color:var(--ink);text-align:left;cursor:pointer}
+.mas-menu button:first-child{border-top:0}
+.mas-menu button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
+.mas-menu svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.toast.undo{display:flex;align-items:center;gap:16px;border-radius:8px;padding:10px 12px 10px 16px;max-width:min(460px,calc(100% - 32px));width:max-content}
+.toast.undo button{border:0;background:none;color:#F1C27A;font:400 1.1rem var(--f-label);letter-spacing:.1em;cursor:pointer;padding:6px 4px;white-space:nowrap}
+/* Hoy */
+.gsearch{position:relative;margin-bottom:14px}
+.gsearch input{width:100%;padding-left:40px;height:46px;font-size:1rem}
+.gsearch svg{position:absolute;left:13px;top:13px;width:20px;height:20px;fill:none;stroke:var(--muted);stroke-width:1.8;stroke-linecap:round}
+.gres{margin-bottom:14px}
+.gres .row{cursor:pointer}
+.hoy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;align-items:start}
+.hoy-grid .panel{margin:0}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-top:1px solid var(--sunk);background:none;padding:9px 0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.hrow:first-child{border-top:0}
+.hrow:hover b,.hrow:hover .nm{color:var(--accent)}
+.hrow .nm{font-weight:600}
+.hrow small{display:block;color:var(--muted);font-size:.84rem;font-weight:400;margin-top:1px}
+.hrow .pill{flex:none}
+.tagit{font-size:.7rem;font-weight:700;letter-spacing:.04em;background:#E3DDF0;color:#4F2F55;border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:1px}
+/* hoja de pago y ficha */
+.ov-sheet .modal{max-width:520px}
+.paysug{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:6px}
+.paysug button{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;border:0;border-top:1px solid var(--sunk);background:var(--surface);padding:10px 12px;font:inherit;color:var(--ink);text-align:left;cursor:pointer}
+.paysug button:first-child{border-top:0}
+.paysug button:hover{background:var(--sunk)}
+.paysug small{display:block;color:var(--muted);font-size:.82rem}
+.paywho{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--accent-soft);border-radius:10px;padding:10px 12px}
+.paywho small{display:block;color:var(--muted);font-size:.84rem}
+.plbl{font-family:var(--f-label);letter-spacing:.08em;color:var(--muted);font-size:1rem;margin:4px 0 -6px}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);border-radius:999px;padding:8px 13px;font:600 .92rem var(--f-body);background:var(--surface);color:var(--ink);cursor:pointer;text-align:left;line-height:1.2}
+.chip small{display:block;font-weight:500;font-size:.75rem;opacity:.8}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chip.paid{background:var(--ok-soft);color:var(--ok);border-color:transparent;cursor:default}
+.metseg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.metseg button{flex:1;border:0;background:var(--surface);padding:12px;font:600 1rem var(--f-body);color:var(--ink);cursor:pointer}
+.metseg button[aria-pressed="true"]{background:var(--ok-soft);color:var(--ok)}
+.paytot{display:flex;justify-content:space-between;align-items:baseline;font-size:.95rem}
+.paytot b{font-family:var(--f-display);font-weight:400;font-size:1.4rem}
+.btn.big{min-height:50px;font-size:1.02rem;width:100%;justify-content:center}
+.ficha-tags{display:flex;gap:6px;flex-wrap:wrap}
+.ftag{font-size:.8rem;font-weight:600;border-radius:4px;padding:3px 8px;background:#F2E5C3;color:#6b5114}
+.ftag.it{background:#E3DDF0;color:#4F2F55}
+.fsec{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.fsec h3{font-family:var(--f-display);font-size:1.1rem;margin:0 0 8px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.fsec h3 span{font-family:var(--f-body);font-size:.84rem;color:var(--muted)}
+.mini{display:grid;grid-template-columns:repeat(12,1fr);gap:3px}
+.mini span{height:24px;border-radius:3px;display:grid;place-items:center;font:400 .8rem var(--f-label);letter-spacing:.03em;background:var(--sunk);color:var(--muted)}
+.mini .p{background:var(--ok-soft);color:var(--ok)}
+.mini .d{background:var(--bad-soft);color:var(--bad)}
+.mini .x{background:transparent;border:1px dashed var(--line)}
+.mini .ex{background:var(--sunk);color:var(--muted)}
+.fsub{font-size:.84rem;color:var(--muted);margin:10px 0 4px}
+.fsub:first-of-type{margin-top:0}
+.two-btn{display:flex;gap:8px}.two-btn .btn{flex:1;justify-content:center}
+@media (max-width:860px){
+  .deskonly{display:none!important}
+  .mobonly{display:flex!important}
+  .sidenav button[data-mas][aria-current="page"]{background:rgb(0 0 0 / .22);color:var(--gold);border-color:color-mix(in srgb,var(--gold) 70%,transparent)}
+  .fab{bottom:calc(84px + env(safe-area-inset-bottom,0px));right:max(16px,env(safe-area-inset-right,0px));width:58px;height:58px}
+  .fab-menu{bottom:calc(154px + env(safe-area-inset-bottom,0px));right:max(16px,env(safe-area-inset-right,0px))}
+  .wrap{padding-bottom:calc(170px + env(safe-area-inset-bottom,0px))}
+  .toast,.toast.undo{bottom:calc(152px + env(safe-area-inset-bottom,0px))}
+  .ov-sheet{align-items:flex-end;padding:0!important}
+  .ov-sheet .modal{max-width:none;border-radius:18px 18px 0 0;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));max-height:92vh;overflow-y:auto}
+  .hoy-grid{grid-template-columns:minmax(0,1fr)}
+  #btn-gear{top:0}
+}
 </style>
 </head>
 <body>
@@ -496,12 +587,14 @@ input,select,textarea{font-size:16px!important}
   <aside class="side">
     <div class="brand">Club de Lectura<small id="brand-sub">Administración</small></div>
     <nav class="sidenav" id="sidenav" aria-label="Secciones">
+      <button data-sec="hoy"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>Hoy</button>
       <button data-sec="clubes"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg>The Book Club</button>
       <button data-sec="it"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M5 5l2 2M19 5l-2 2"/></svg>The It Club</button>
       <button data-sec="actividades"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg>Actividades</button>
-      <button data-sec="pagos"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M16 15h2"/><path d="M6 6V4.5A1.5 1.5 0 0 1 7.5 3H17"/></svg>Pagos</button>
-      <button data-sec="calendario"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17h2"/></svg>Calendario</button>
-      <button data-sec="respaldo"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Respaldo</button>
+      <button data-sec="pagos" class="deskonly"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M16 15h2"/><path d="M6 6V4.5A1.5 1.5 0 0 1 7.5 3H17"/></svg>Pagos</button>
+      <button data-sec="calendario" class="deskonly"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17h2"/></svg>Calendario</button>
+      <button data-sec="respaldo" class="deskonly"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Respaldo</button>
+      <button data-mas class="mobonly" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>Más</button>
     </nav>
   </aside>
   <div class="wrap">
@@ -512,9 +605,10 @@ input,select,textarea{font-size:16px!important}
         <p id="last-edit" class="lastedit" hidden></p>
       </div>
       <div class="topbtns"><button class="btn green" id="btn-pdf" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6"/><path d="M9.5 14.5 12 17l2.5-2.5"/></svg><span id="btn-pdf-l">Generar PDF</span></button>
-      <button class="btn primary" id="btn-new" disabled>+ Registrar chica</button></div>
+      <button class="btn primary" id="btn-new" disabled hidden>+ Registrar chica</button></div>
+      <button class="iconbtn" id="btn-gear" type="button" aria-label="Respaldo y ajustes" hidden><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     </header>
-    <div class="scope" id="scope" role="group" aria-label="Qué clubes ver">
+    <div class="scope" id="scope" hidden role="group" aria-label="Qué clubes ver">
       <button data-scope="all" aria-pressed="true">General<small id="sc-p"></small></button>
     </div>
     <nav class="tabs" role="tablist" id="tabs">
@@ -543,6 +637,22 @@ input,select,textarea{font-size:16px!important}
   </div>
 </div>
 <div id="modal-root"></div>
+<div class="mas-menu" id="mas-menu" role="menu" hidden>
+  <button data-sec="pagos" role="menuitem"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M16 15h2"/></svg>Pagos</button>
+  <button data-sec="calendario" role="menuitem"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4M16 3v4"/></svg>Calendario</button>
+  <button data-sec="respaldo" role="menuitem"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Respaldo</button>
+</div>
+<div class="fab-wrap" id="fab-wrap" hidden>
+  <div class="fab-back" id="fab-back"></div>
+  <div class="fab-menu" id="fab-menu" role="menu">
+    <button data-fab="pago" class="main" role="menuitem">💳 Registrar pago</button>
+    <button data-fab="chica" role="menuitem">👤 Registrar chica</button>
+    <button data-fab="it" role="menuitem">⏱ Inscribir en The It Club</button>
+    <button data-fab="reunion" role="menuitem">📅 Nueva reunión</button>
+    <button data-fab="act" role="menuitem">✨ Nueva actividad</button>
+  </div>
+</div>
+<button class="fab" id="fab" type="button" aria-label="Agregar" aria-expanded="false" hidden><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
 
 <script src="vendor/firebase/firebase-app-compat.js"></script>
 <script src="vendor/firebase/firebase-auth-compat.js"></script>
@@ -558,8 +668,8 @@ const CUR_Y=now.getFullYear(), CUR_M=now.getMonth()+1;
 const curKey=`${CUR_Y}-${String(CUR_M).padStart(2,'0')}`;
 const S={db:null,ready:{clubs:false,members:false},canWrite:true,
   clubs:[],members:[],books:{},movs:[],config:{precioLibro:15},
-  section:'clubes',scope:'propios',payTab:'general',acts:[],actId:null,tab:'resumen',year:CUR_Y,club:'',gbm:'',itTab:'resumen',tasas:[],abonos:[],vincci:[],eventos:[],calY:CUR_Y,calM:CUR_M,calDay:'',calTab:'cal',vinDraft:{},abDraft:{},partQ:'',partAll:false,fxOpen:new Set(),fxQ:'',itClub:'',itQ:'',itMommy:'',itDebt:false,allMembers:[],q:'',onlyDebt:false,bookMonth:CUR_M,finMonth:CUR_M,memb:''};
-try{const t=localStorage.getItem('cl-tab'); if(t) S.tab=({pagos:'cuotas',finanzas:'resumen'})[t]||t; const sc=localStorage.getItem('cl-sec'); if(sc) S.section=sc; const sp=localStorage.getItem('cl-scope'); if(sp) S.scope=sp; const pt=localStorage.getItem('cl-ptab'); if(pt) S.payTab=pt; const itt=localStorage.getItem('cl-ittab'); if(itt) S.itTab=itt; if(S.tab==='aportes'){S.section='pagos';S.payTab='bm';S.tab='resumen';}}catch(e){}
+  section:'hoy',scope:'propios',gq:'',payTab:'general',acts:[],actId:null,tab:'resumen',year:CUR_Y,club:'',gbm:'',itTab:'resumen',tasas:[],abonos:[],vincci:[],eventos:[],calY:CUR_Y,calM:CUR_M,calDay:'',calTab:'cal',vinDraft:{},abDraft:{},partQ:'',partAll:false,fxOpen:new Set(),fxQ:'',itClub:'',itQ:'',itMommy:'',itDebt:false,allMembers:[],q:'',onlyDebt:false,bookMonth:CUR_M,finMonth:CUR_M,memb:''};
+try{const t=localStorage.getItem('cl-tab'); if(t) S.tab=({pagos:'cuotas',finanzas:'resumen'})[t]||t; const sp=localStorage.getItem('cl-scope'); if(sp) S.scope=sp; const pt=localStorage.getItem('cl-ptab'); if(pt) S.payTab=pt; const itt=localStorage.getItem('cl-ittab'); if(itt) S.itTab=itt; if(S.tab==='aportes'){S.section='pagos';S.payTab='bm';S.tab='resumen';}}catch(e){}
 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -593,7 +703,12 @@ function searchList(list,textFn,qRaw,maxApprox){
 }
 const approxNote=(arr,q)=>arr&&arr.approx?`<p class="note" style="margin:0 0 10px">No encontré “${esc(q)}” exacto. Te muestro los nombres más parecidos.</p>`:'';
 
-function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2600);}
+function toast(msg,undo){
+  document.querySelectorAll('.toast').forEach(x=>x.remove());
+  const t=document.createElement('div');t.className='toast'+(undo?' undo':'');
+  if(undo){t.innerHTML=`<span>${esc(msg)}</span><button type="button">Deshacer</button>`;t.querySelector('button').onclick=()=>{t.remove();undo();toast('Cambio deshecho');};}
+  else t.textContent=msg;
+  t.setAttribute('role','status');document.body.appendChild(t);setTimeout(()=>t.remove(),undo?6000:2600);}
 
 /* one write at a time per document */
 const chains={};
@@ -743,15 +858,30 @@ $('#tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-ta
 function setSection(sec){S.section=sec;try{localStorage.setItem('cl-sec',sec);}catch(e){} render();window.scrollTo({top:0});}
 $('#paytabs').addEventListener('click',e=>{const b=e.target.closest('button[data-ptab]');if(!b)return;S.payTab=b.dataset.ptab;try{localStorage.setItem('cl-ptab',S.payTab);}catch(e){} render();});
 $('#scope').addEventListener('click',e=>{const b=e.target.closest('button[data-scope]');if(!b)return;S.scope=b.dataset.scope;S.club='';try{localStorage.setItem('cl-scope',S.scope);}catch(e){} render();});
-$('#sidenav').addEventListener('click',e=>{const b=e.target.closest('button[data-sec]');if(!b)return; if(b.dataset.sec==='actividades'&&S.section==='actividades')S.actId=null; setSection(b.dataset.sec);});
+$('#sidenav').addEventListener('click',e=>{
+  if(e.target.closest('button[data-mas]')){toggleMas();return;}
+  const b=e.target.closest('button[data-sec]');if(!b)return; toggleMas(false); if(b.dataset.sec==='actividades'&&S.section==='actividades')S.actId=null; if(b.dataset.sec==='hoy'&&S.section==='hoy'){S.gq='';} setSection(b.dataset.sec);});
+function toggleMas(open){const m=$('#mas-menu'),b=document.querySelector('#sidenav [data-mas]');const o=open===undefined?m.hidden:open;m.hidden=!o;if(b)b.setAttribute('aria-expanded',o);}
+$('#mas-menu').addEventListener('click',e=>{const b=e.target.closest('button[data-sec]');if(!b)return;toggleMas(false);setSection(b.dataset.sec);});
+document.addEventListener('pointerdown',e=>{const m=$('#mas-menu');if(!m.hidden&&!m.contains(e.target)&&!e.target.closest('[data-mas]'))toggleMas(false);});
+$('#btn-gear').addEventListener('click',()=>setSection('respaldo'));
+function toggleFab(open){const w=$('#fab-wrap'),f=$('#fab');const o=open===undefined?w.hidden:open;w.hidden=!o;f.setAttribute('aria-expanded',o);}
+$('#fab').addEventListener('click',()=>toggleFab());
+$('#fab-back').addEventListener('click',()=>toggleFab(false));
+$('#fab-menu').addEventListener('click',e=>{const b=e.target.closest('button[data-fab]');if(!b)return;toggleFab(false);
+  const a=b.dataset.fab; if(a==='pago')openPay(); else if(a==='chica')openMember(null); else if(a==='it')openItMember(null); else if(a==='reunion')openEvento(null); else if(a==='act')openActivity(null);});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){toggleFab(false);toggleMas(false);}});
 $('#btn-pdf').addEventListener('click',()=>makePdf(S.year,S.finMonth));
 $('#btn-new').addEventListener('click',()=>{ if(S.section==='calendario') openEvento(null); else if(S.section==='actividades') openActivity(null); else if(S.section==='it') openItMember(null); else openMember(null); });
 $('#ittabs').addEventListener('click',e=>{const b=e.target.closest('button[data-ittab]');if(!b)return;S.itTab=b.dataset.ittab;try{localStorage.setItem('cl-ittab',S.itTab);}catch(e){} render();window.scrollTo({top:0});});
 
 function render(){
   document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===S.tab));
-  document.querySelectorAll('#sidenav button').forEach(b=>{if(b.dataset.sec===S.section)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-  $('#tabs').hidden=S.section!=='clubes'; $('#scope').hidden=S.section!=='clubes';
+  document.querySelectorAll('#sidenav button[data-sec],#mas-menu button').forEach(b=>{if(b.dataset.sec===S.section)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+  {const mb=document.querySelector('#sidenav [data-mas]');if(mb){if(['pagos','calendario','respaldo'].includes(S.section))mb.setAttribute('aria-current','page');else mb.removeAttribute('aria-current');}}
+  $('#btn-gear').hidden=S.section!=='hoy';
+  $('#fab').hidden=!S.db||!S.canWrite||!S.ready.clubs||!S.ready.members;
+  $('#tabs').hidden=S.section!=='clubes';
   $('#paytabs').hidden=S.section!=='pagos';
   $('#ittabs').hidden=S.section!=='it';
   document.querySelectorAll('#ittabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.ittab===S.itTab));
@@ -759,12 +889,12 @@ function render(){
   
   document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===S.tab));
   const bn=$('#btn-new');
-  bn.hidden=S.section==='pagos'||S.section==='respaldo';
+  bn.hidden=true;
   const bp=$('#btn-pdf'); bp.hidden=S.section!=='pagos'; bp.disabled=!S.db||!S.ready.clubs||!S.ready.members||S.pdfBusy;
   $('#btn-pdf-l').textContent=S.pdfBusy?'Generando…':`Generar PDF · ${MES[S.finMonth-1]} ${S.year}`;
   bn.textContent=S.section==='calendario'?'+ Nueva reunión':S.section==='actividades'?'+ Nueva actividad':S.section==='it'?'+ Inscribir chica':'+ Registrar chica';
   bn.disabled=!S.db||!S.canWrite||(S.section==='clubes'&&!scopeClubs().length);
-  $('#sec-title').textContent={clubes:'The Book Club',it:'The It Club',actividades:'Actividades',pagos:'Pagos',respaldo:'Respaldo',calendario:'Calendario'}[S.section]||'Club de Lectura';
+  $('#sec-title').textContent={hoy:'Hoy',clubes:'The Book Club',it:'The It Club',actividades:'Actividades',pagos:'Pagos',respaldo:'Respaldo',calendario:'Calendario'}[S.section]||'Club de Lectura';
   if(!S.db){return;}
   if(!S.ready.clubs||!S.ready.members){ $('#view').innerHTML='<div class="status">Cargando datos del club…</div>'; return; }
   const total=S.members.length;
@@ -773,12 +903,14 @@ function render(){
   $('#sub').textContent=S.section==='clubes'?`${scM} chicas en ${scopeClubs().length} clubes · ${bookmommies().length} bookmommies · ${MES[CUR_M-1]} ${CUR_Y}`
     :S.section==='actividades'?`${S.acts.length} ${S.acts.length===1?'actividad':'actividades'} · presupuestos y cobros`
     :S.section==='it'?`${new Set(itMems().map(r=>r.m.id)).size} chicas en ${itClubList().length} clubes · ${mommies().length} mommies · ${MES[CUR_M-1]} ${CUR_Y}`
+    :S.section==='hoy'?(()=>{const s=now.toLocaleDateString('es-VE',{weekday:'long',day:'numeric',month:'long'});return s.charAt(0).toUpperCase()+s.slice(1);})()
     :S.section==='respaldo'?'Sincronización y copias de seguridad'
     :S.section==='calendario'?`${S.eventos.filter(e=>(e.fecha||'')>=todayStr()).length} próximas reuniones y eventos`
     :'Todo el dinero: The Book Club, The It Club, actividades y Vincci';
   const v=$('#view');
   let fn;
-  if(S.section==='respaldo') fn=vRespaldo;
+  if(S.section==='hoy') fn=vHoy;
+  else if(S.section==='respaldo') fn=vRespaldo;
   else if(S.section==='calendario') fn=vCalendario;
   else if(S.section==='actividades') fn=vActividades;
   else if(S.section==='pagos') fn=vPagosGlobal;
@@ -1616,9 +1748,11 @@ function cycleItPay(id,cid,k){
   const mem=(m.itClubs||{})[cid]; if(!mem) return;
   const cur=(mem.pagos||{})[k]||null, next=cur===null?'pagado':cur==='pagado'?'exento':null;
   const inner={pagos:{[k]:next}}; if(next==='pagado'&&(!mem.desde||k<mem.desde)) inner.desde=k;
+  const prev={itClubs:{[cid]:{pagos:{[k]:cur}}}}; if(inner.desde) prev.itClubs[cid].desde=mem.desde??null;
   m.itClubs={...m.itClubs,[cid]:{...mem,...inner,pagos:{...(mem.pagos||{}),[k]:next}}};
   render();
   write('members/'+id,()=>S.db.doc('members/'+id).update({itClubs:{[cid]:inner}})).catch(()=>{});
+  toast(`${MES[+k.slice(5)-1]}: ${stLabel(next)} · ${full(m)}`,()=>{deepSet(m,prev);render();write('members/'+id,()=>S.db.doc('members/'+id).update(prev)).catch(()=>{});});
 }
 function openItMember(memberId,cid){
   const m=memberId?S.allMembers.find(x=>x.id===memberId):null;
@@ -1702,6 +1836,7 @@ function openItMember(memberId,cid){
 let qTimer;
 document.addEventListener('input',e=>{
   const t=e.target;
+  if(t.id==='g-q'){clearTimeout(qTimer);S.gq=t.value;qTimer=setTimeout(render,150);}
   if(t.id==='f-q'){clearTimeout(qTimer);S.q=t.value;qTimer=setTimeout(render,180);}
   if(t.id==='f-partq'){clearTimeout(qTimer);S.partQ=t.value;qTimer=setTimeout(render,180);}
   if(t.id==='np-n'){showSug('np-sug',t.value,'pickpart');}
@@ -1740,6 +1875,9 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   const d=b.dataset;
   if(d.open){openMember(d.open);return;}
+  if(d.ficha){openFicha(d.ficha);return;}
+  if(d.gocal){S.calTab=d.gocal;S.calY=CUR_Y;S.calM=CUR_M;setSection('calendario');return;}
+  if(d.goit){S.itDebt=true;S.itClub='';S.itQ='';S.itTab='cuotas';setSection('it');return;}
   if(d.itedit!==undefined&&d.itedit){closeModal();openItMember(d.itedit,d.cid||null);return;}
   if(d.fxm){fxMember(d.fxm,d.k);return;}
   if(d.fxi){fxIt(d.fxi,d.cid,d.k);return;}
@@ -1817,9 +1955,13 @@ function cyclePay(id,k){
   // optimistic
   const upd={pagos:{[k]:next}};
   if(next==='pagado'&&(!m.desde||k<m.desde)) upd.desde=k;
+  const prev={pagos:{[k]:cur}}; if(upd.desde) prev.desde=m.desde??null;
   m.pagos={...(m.pagos||{}),[k]:next}; if(upd.desde) m.desde=upd.desde; render();
   write('members/'+id,()=>S.db.doc('members/'+id).update(upd)).catch(()=>{});
+  toast(`${MES[+k.slice(5)-1]}: ${stLabel(next)} · ${full(m)}`,()=>{deepSet(m,prev);render();write('members/'+id,()=>S.db.doc('members/'+id).update(prev)).catch(()=>{});});
 }
+const stLabel=v=>v==='pagado'?'pagado':v==='exento'?'no aplica':'sin marcar';
+function deepSet(obj,patch){for(const [k,v] of Object.entries(patch)){if(v&&typeof v==='object'&&!Array.isArray(v)){obj[k]=obj[k]&&typeof obj[k]==='object'?{...obj[k]}:{};deepSet(obj[k],v);}else obj[k]=v;}return obj;}
 function saveBook(memberId,patch){
   const y=S.year, id=`${memberId}--${y}`;
   const prev=S.books[id]||{memberId,anio:y,titulo:'',estado:'pendiente',costo:null};
@@ -2439,6 +2581,193 @@ if('serviceWorker' in navigator){
   });
 }
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist();}catch(e){}
+
+/* ---------- Hoy ---------- */
+const mLbl=k=>MES3[+k.slice(5)-1]+(+k.slice(0,4)!==CUR_Y?' '+k.slice(2,4):'');
+function memberClubsTxt(m){const a=[];if(m.club&&clubById(m.club))a.push(clubName(m.club));for(const [cid,mem] of Object.entries(m.itClubs||{}))if(mem&&clubById(cid))a.push(clubById(cid).nombre+' (It)');return a.join(' · ')||'Sin club';}
+function hoyData(){
+  const deb=[];
+  for(const m of S.members){const prev=debt(m).months.filter(k=>k<curKey);if(prev.length)deb.push({m,it:false,where:clubName(m.club),months:prev,amt:prev.length*(+m.membresia||0)});}
+  for(const r of itMems()){const prev=pDebt(r.mem.pagos,r.mem.desde,r.mem.cuota).months.filter(k=>k<curKey);if(prev.length)deb.push({m:r.m,it:true,where:clubById(r.cid).nombre,months:prev,amt:prev.length*(+r.mem.cuota||0)});}
+  deb.sort((a,b)=>b.amt-a.amt||cmpEs(full(a.m),full(b.m)));
+  const today=new Date(CUR_Y,now.getMonth(),now.getDate()), up=[];
+  for(const m of S.members){if(!m.nacimiento)continue;let d=new Date(CUR_Y,bMonth(m)-1,bDay(m));if(d<today)d=new Date(CUR_Y+1,bMonth(m)-1,bDay(m));const diff=Math.round((d-today)/864e5);if(diff<=14)up.push({m,diff,d});}
+  up.sort((a,b)=>a.diff-b.diff);
+  const t0=todayStr(), t7=(()=>{const d=new Date(today);d.setDate(d.getDate()+6);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;})();
+  const evs=S.eventos.filter(e=>e.fecha&&e.fecha>=t0&&e.fecha<=t7).sort(evSort);
+  const ci=coordInfo(CUR_Y,CUR_M);
+  const acts=S.acts.filter(a=>!isFut(a)).map(a=>({a,c:actCalc(a)})).filter(x=>x.c.porCobrar>0).sort((x,y)=>(isFin(x.a)-isFin(y.a))||y.c.porCobrar-x.c.porCobrar);
+  return {deb,up,evs,pend:ci.pend,acts};
+}
+function vHoy(){
+  const D=hoyData(), q=S.gq.trim();
+  const totDeb=D.deb.reduce((t,x)=>t+x.amt,0), nDeb=new Set(D.deb.map(x=>x.m.id)).size, SHOW=6;
+  let res='';
+  if(q){
+    const ms=searchList(S.allMembers,m=>full(m),q,6).slice(0,8);
+    const cs=S.clubs.filter(c=>norm(c.nombre||'').includes(norm(q))).slice(0,5);
+    const as=S.acts.filter(a=>norm(a.nombre||'').includes(norm(q))).slice(0,5);
+    res=`<section class="panel gres">${approxNote(ms,q)}
+      ${ms.map(m=>{const d=debt(m),dt=(m.club?d.amount:0)+Object.entries(m.itClubs||{}).filter(([c,x])=>x&&clubById(c)).reduce((t,[c,x])=>t+pDebt(x.pagos,x.desde,x.cuota).amount,0);
+        return `<button class="hrow" data-ficha="${esc(m.id)}"><span><span class="nm">${esc(full(m))}</span><small>${esc(memberClubsTxt(m))}</small></span>${dt>0?`<span class="pill bad">debe ${money(dt)}</span>`:'<span class="pill ok">al día</span>'}</button>`;}).join('')}
+      ${cs.map(c=>`<button class="hrow" data-viewclub="${esc(c.id)}"><span><span class="nm">${esc(c.nombre)}</span><small>Club · ${isIt(c)?'The It Club':'The Book Club'} · ${esc(bmName(bmOf(c))||'Sin encargada')}</small></span><span class="muted">→</span></button>`).join('')}
+      ${as.map(a=>`<button class="hrow" data-openact="${esc(a.id)}"><span><span class="nm">${esc(a.nombre)}</span><small>Actividad · ${esc(fmtDate(a.fecha))}</small></span><span class="muted">→</span></button>`).join('')}
+      ${!ms.length&&!cs.length&&!as.length?'<div class="empty">No encontré nada con ese nombre.</div>':''}
+    </section>`;
+  }
+  const bookPill=(m,d)=>+m.membresia===10?(bookState(m,d.getFullYear())==='comprado'?'<span class="pill ok">Libro comprado</span>':'<span class="pill warn">Libro pendiente</span>'):'<span class="pill m5">$5 · sin libro</span>';
+  return `
+  <div class="gsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="g-q" placeholder="Buscar chica, club o actividad…" value="${esc(S.gq)}" autocomplete="off" enterkeyhint="search"></div>
+  ${res}
+  <div class="hoy-grid">
+    <section class="panel">
+      <div class="sec-head"><h2>Deben meses anteriores</h2><span class="num"><b style="color:var(--bad)">${money(totDeb)}</b> <span class="muted">· ${nDeb} chicas</span></span></div>
+      ${D.deb.length?D.deb.slice(0,SHOW).map(x=>`<button class="hrow" data-ficha="${esc(x.m.id)}"><span><span class="nm">${esc(full(x.m))}</span>${x.it?'<span class="tagit">IT</span>':''}<small>${esc(x.where)} · ${x.months.map(mLbl).join(', ')}</small></span><span class="pill bad num">${money(x.amt)}</span></button>`).join('')
+        +`<p style="margin:10px 0 0;display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" data-go="cuotas" data-debt="1">Ver en The Book Club</button>${D.deb.some(x=>x.it)?'<button class="btn small" data-goit="1">Ver en The It Club</button>':''}</p>`
+        :'<div class="empty">Nadie debe meses anteriores. 🎉</div>'}
+    </section>
+    <section class="panel">
+      <div class="sec-head"><h2>Cumpleaños</h2><span class="muted">próximos 14 días</span></div>
+      ${D.up.length?D.up.map(({m,diff,d})=>`<button class="hrow" data-ficha="${esc(m.id)}"><span><span class="nm">${esc(full(m))}</span><small>${d.getDate()} de ${MES[d.getMonth()]} · ${esc(clubName(m.club))} · ${diff===0?'<b>hoy</b>':diff===1?'mañana':`en ${diff} días`}</small></span>${bookPill(m,d)}</button>`).join(''):'<div class="empty">No hay cumpleaños en los próximos 14 días.</div>'}
+    </section>
+    <section class="panel">
+      <div class="sec-head"><h2>Esta semana</h2><span class="muted">${D.evs.length} ${D.evs.length===1?'reunión':'reuniones'}</span></div>
+      ${D.evs.map(e=>{const dd=new Date(+e.fecha.slice(0,4),+e.fecha.slice(5,7)-1,+e.fecha.slice(8,10));return `<button class="hrow" data-evedit="${esc(e.id)}"><span><span class="nm">${esc(evTitle(e))}</span><small>${DIAS_L[dd.getDay()]} ${dd.getDate()}${e.hora?' · '+esc(fmtHora(e.hora)):''} · ${e.lugar?esc(e.lugar):'sitio por definir'}</small></span>${e.fecha===todayStr()?'<span class="pill warn">hoy</span>':e.club?'<span class="pill ok">coordinado</span>':'<span class="pill m5">evento</span>'}</button>`;}).join('')||'<div class="empty" style="padding:10px 0">No hay reuniones en los próximos 7 días.</div>'}
+      ${D.pend.length?`<button class="hrow" data-gocal="pend"><span><span class="nm">${D.pend.length} ${D.pend.length===1?'club':'clubes'} sin reunión en ${MES[CUR_M-1].toLowerCase()}</span><small>${esc(D.pend.slice(0,4).map(r=>r.c.nombre).join(', '))}${D.pend.length>4?'…':''}</small></span><span class="pill warn">por coordinar</span></button>`:''}
+    </section>
+    <section class="panel">
+      <div class="sec-head"><h2>Actividades por cobrar</h2><span class="num"><b style="color:var(--bad)">${money(D.acts.reduce((t,x)=>t+x.c.porCobrar,0))}</b></span></div>
+      ${D.acts.length?D.acts.slice(0,SHOW).map(({a,c})=>`<button class="hrow" data-openact="${esc(a.id)}"><span><span class="nm">${esc(a.nombre)}</span><small>${isFin(a)?'Finalizada · ':''}${c.pagadas} de ${c.parts.length} pagaron · ${esc(fmtDate(a.fecha))}</small></span><span class="pill ${isFin(a)?'bad':'warn'} num">${money(c.porCobrar)}</span></button>`).join(''):'<div class="empty">Todas las actividades están cobradas.</div>'}
+    </section>
+  </div>`;
+}
+
+/* ---------- ficha de cada chica ---------- */
+function miniYear(stateFn){return `<div class="mini">${MES3.map((l,i)=>{const st=stateFn(i+1);const c=st==='pagado'?'p':st==='debe'?'d':st==='exento'?'ex':'x';return `<span class="${c}" title="${MES[i]}: ${st==='pagado'?'pagado':st==='debe'?'debe':st==='exento'?'no aplica':'—'}">${l.charAt(0)}</span>`;}).join('')}</div>`;}
+function memberDebtTotal(m){let t=m.club&&clubById(m.club)?debt(m).amount:0;for(const [cid,x] of Object.entries(m.itClubs||{}))if(x&&clubById(cid))t+=pDebt(x.pagos,x.desde,x.cuota).amount;return t;}
+function openFicha(id){
+  const m=S.allMembers.find(x=>x.id===id); if(!m) return;
+  const its=Object.entries(m.itClubs||{}).filter(([cid,x])=>x&&clubById(cid));
+  const inBook=!!(m.club&&clubById(m.club));
+  const dt=memberDebtTotal(m);
+  const acts=S.acts.map(a=>({a,p:(a.participantes||[]).find(p=>p.memberId===m.id)})).filter(x=>x.p);
+  let bday='';
+  if(m.nacimiento){const d=new Date(CUR_Y,bMonth(m)-1,bDay(m));const b=bookFor(m,CUR_Y);
+    bday=`<div class="fsec"><h3>Cumpleaños <span>${d.getDate()} de ${MES[d.getMonth()]}</span></h3>${inBook&&+m.membresia===10?`<div class="hrow" style="cursor:default"><span><span class="nm">${b&&b.titulo?esc(b.titulo):'<i class="muted">Libro sin elegir</i>'}</span><small>Libro de cumpleaños ${CUR_Y}</small></span>${bookState(m,CUR_Y)==='comprado'?'<span class="pill ok">comprado</span>':'<span class="pill warn">pendiente</span>'}</div>`:inBook?'<p class="hint">Membresía de $5: sin libro de cumpleaños.</p>':''}</div>`;}
+  showModal(`
+    <div class="head"><div><h2>${esc(full(m))}</h2><div class="ficha-tags" style="margin-top:6px">${inBook?`<span class="ftag">${esc(clubLabel(m.club))} · ${money(+m.membresia||0)}</span>`:''}${its.map(([cid,x])=>`<span class="ftag it">It · ${esc(clubById(cid).nombre)} · ${money(+x.cuota||0)}</span>`).join('')}</div></div><button class="btn small" id="f-close" type="button">Cerrar</button></div>
+    ${dt>0?`<div class="pill bad" style="align-self:flex-start">Debe ${money(dt)} en total</div>`:'<div class="pill ok" style="align-self:flex-start">Al día con sus cuotas</div>'}
+    <div class="fsec"><h3>Cuotas ${CUR_Y}</h3>
+      ${inBook?`<p class="fsub">The Book Club · ${esc(clubName(m.club))}</p>${miniYear(mo=>payState(m,CUR_Y,mo))}`:''}
+      ${its.map(([cid,x])=>`<p class="fsub">The It Club · ${esc(clubById(cid).nombre)}</p>${miniYear(mo=>pState(x.pagos,x.desde,CUR_Y,mo))}`).join('')}
+      ${!inBook&&!its.length?'<p class="hint">No está en ningún club.</p>':''}
+    </div>
+    ${bday}
+    ${acts.length?`<div class="fsec"><h3>Actividades <span>${acts.length}</span></h3>${acts.map(({a,p})=>`<button class="hrow" data-openact="${esc(a.id)}" data-closemodal="1"><span><span class="nm">${esc(a.nombre)}</span><small>${esc(fmtDate(a.fecha))}${isFin(a)?' · finalizada':''}</small></span>${p.pagado?'<span class="pill ok">pagó</span>':`<span class="pill bad">debe ${money(+a.precio||0)}</span>`}</button>`).join('')}</div>`:''}
+    ${m.telefono?`<p class="hint">📞 ${fmtPhones(m.telefono)}</p>`:''}
+    <div class="two-btn">${S.canWrite?`<button class="btn primary" id="f-pay" type="button">Registrar pago</button>`:''}<button class="btn" id="f-edit" type="button">Editar datos</button></div>`,()=>{
+    $('#f-close').onclick=closeModal;
+    const fp=$('#f-pay'); if(fp) fp.onclick=()=>openPay(m.id);
+    $('#f-edit').onclick=()=>{closeModal(); if(inBook||!its.length) openMember(m.id); else openItMember(m.id,its[0][0]);};
+    $('#ov').addEventListener('click',e=>{if(e.target.closest('[data-closemodal]'))closeModal();});
+  });
+}
+
+/* ---------- registrar pago ---------- */
+const PAY={mid:null,sel:new Set(),met:'bs',q:''};
+function payOptions(m){
+  const out=[];
+  const after=k=>shiftK(k,1);
+  if(m.club&&clubById(m.club)){
+    const owed=debt(m).months, amt=+m.membresia||0;
+    for(const k of owed) out.push({key:'b|'+k,kind:'book',k,amt,label:mLbl(k),sub:'Book Club'});
+    let nx=owed.length?after(owed[owed.length-1]):curKey; if(nx<curKey)nx=curKey; let g=0; while(payState(m,+nx.slice(0,4),+nx.slice(5,7))==='pagado'&&g++<24) nx=after(nx);
+    if(!owed.includes(nx)) out.push({key:'b|'+nx,kind:'book',k:nx,amt,label:mLbl(nx),sub:'Book Club · adelantado',adv:true});
+  }
+  for(const [cid,x] of Object.entries(m.itClubs||{})){
+    const c=clubById(cid); if(!x||!c) continue;
+    const owed=pDebt(x.pagos,x.desde,x.cuota).months, amt=+x.cuota||0;
+    for(const k of owed) out.push({key:'i|'+cid+'|'+k,kind:'it',cid,k,amt,label:mLbl(k),sub:'It · '+c.nombre});
+    let nx=owed.length?after(owed[owed.length-1]):curKey; if(nx<curKey)nx=curKey; let g=0; while(pState(x.pagos,x.desde,+nx.slice(0,4),+nx.slice(5,7))==='pagado'&&g++<24) nx=after(nx);
+    if(!owed.includes(nx)) out.push({key:'i|'+cid+'|'+nx,kind:'it',cid,k:nx,amt,label:mLbl(nx),sub:'It · '+c.nombre+' · adelantado',adv:true});
+  }
+  for(const a of S.acts){const p=(a.participantes||[]).find(p=>p.memberId===m.id&&!p.pagado); if(p&&!isFut(a)) out.push({key:'a|'+a.id+'|'+p.id,kind:'act',aid:a.id,pid:p.id,amt:+a.precio||0,label:a.nombre,sub:'Actividad'});}
+  return out;
+}
+function openPay(mid){
+  if(!S.canWrite) return;
+  PAY.mid=mid||null; PAY.met='bs'; PAY.q=''; PAY.sel=new Set();
+  if(PAY.mid){const m=S.allMembers.find(x=>x.id===PAY.mid);const o=m?payOptions(m).filter(x=>!x.adv):[];if(o.length)PAY.sel.add(o[0].key);}
+  showModal(`<div class="head"><h2>Registrar pago</h2><button class="btn small" id="py-close" type="button">Cerrar</button></div><div id="py-body" style="display:flex;flex-direction:column;gap:14px"></div>`,()=>{
+    $('#ov').classList.add('ov-sheet');
+    $('#py-close').onclick=closeModal;
+    const body=$('#py-body');
+    body.addEventListener('input',e=>{if(e.target.id==='py-q'){PAY.q=e.target.value;paintPaySug();}});
+    body.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+      if(d.pypick){PAY.mid=d.pypick;PAY.sel=new Set();const m=S.allMembers.find(x=>x.id===PAY.mid);const o=payOptions(m).filter(x=>!x.adv);if(o.length)PAY.sel.add(o[0].key);paintPay();return;}
+      if(d.pychange!==undefined){PAY.mid=null;PAY.q='';paintPay();setTimeout(()=>{const i=$('#py-q');if(i)i.focus();},30);return;}
+      if(d.pyopt){PAY.sel.has(d.pyopt)?PAY.sel.delete(d.pyopt):PAY.sel.add(d.pyopt);paintPay();return;}
+      if(d.pymet){PAY.met=d.pymet;paintPay();return;}
+      if(d.pysave!==undefined){savePay();return;}
+    });
+    paintPay();
+    if(!PAY.mid) setTimeout(()=>{const i=$('#py-q');if(i)i.focus();},60);
+  });
+}
+function paintPaySug(){
+  const box=$('#py-sug'); if(!box) return; const q=PAY.q.trim();
+  if(!q){box.innerHTML='';box.hidden=true;return;}
+  const list=searchList(S.allMembers,m=>full(m),q,5).slice(0,6);
+  box.hidden=!list.length;
+  box.innerHTML=list.map(m=>{const dt=memberDebtTotal(m);return `<button type="button" data-pypick="${esc(m.id)}"><span>${esc(full(m))}<small>${esc(memberClubsTxt(m))}</small></span>${dt>0?`<span class="pill bad">debe ${money(dt)}</span>`:''}</button>`;}).join('');
+}
+function paintPay(){
+  const body=$('#py-body'); if(!body) return;
+  const m=PAY.mid&&S.allMembers.find(x=>x.id===PAY.mid);
+  if(!m){body.innerHTML=`<label style="display:flex;flex-direction:column;gap:4px;font-size:.8rem;font-weight:600;color:var(--muted)">Chica<input type="search" id="py-q" placeholder="Escribe su nombre" autocomplete="off" value="${esc(PAY.q)}"></label><div class="paysug" id="py-sug" hidden></div>`;paintPaySug();return;}
+  const opts=payOptions(m); for(const k of [...PAY.sel]) if(!opts.some(o=>o.key===k)) PAY.sel.delete(k);
+  const chosen=opts.filter(o=>PAY.sel.has(o.key)), tot=chosen.reduce((t,o)=>t+o.amt,0);
+  const grp=(kind)=>opts.filter(o=>o.kind===kind);
+  const chips=list=>list.map(o=>`<button type="button" class="chip" data-pyopt="${esc(o.key)}" aria-pressed="${PAY.sel.has(o.key)}">${esc(o.label)} · ${money(o.amt)}<small>${esc(o.sub)}</small></button>`).join('');
+  body.innerHTML=`
+    <div class="paywho"><span><b>${esc(full(m))}</b><small>${esc(memberClubsTxt(m))}</small></span><button type="button" class="btn small" data-pychange>Cambiar</button></div>
+    ${opts.length?`<p class="plbl">QUÉ PAGA</p>
+      ${grp('book').length?`<div class="chips">${chips(grp('book'))}</div>`:''}
+      ${grp('it').length?`<div class="chips">${chips(grp('it'))}</div>`:''}
+      ${grp('act').length?`<div class="chips">${chips(grp('act'))}</div>`:''}
+      <p class="plbl">MÉTODO</p>
+      <div class="metseg"><button type="button" data-pymet="bs" aria-pressed="${PAY.met==='bs'}">Bolívares</button><button type="button" data-pymet="usd" aria-pressed="${PAY.met==='usd'}">Dólares</button></div>
+      <div class="paytot"><span class="muted">${chosen.length} ${chosen.length===1?'pago':'pagos'} · hoy, ${fmtDay(todayStr())}</span><b>${money(tot)}</b></div>
+      <button type="button" class="btn primary big" data-pysave${chosen.length?'':' disabled'}>Guardar pago</button>`
+    :'<div class="empty">No tiene nada pendiente por pagar.</div>'}`;
+}
+function savePay(){
+  const m=S.allMembers.find(x=>x.id===PAY.mid); if(!m) return;
+  const opts=payOptions(m).filter(o=>PAY.sel.has(o.key)); if(!opts.length) return;
+  const met=PAY.met, f=todayStr(), upd={}, prev={}, actPrev=[];
+  for(const o of opts){
+    if(o.kind==='book'){
+      for(const [fld,v] of [['pagos','pagado'],['metodos',met],['fechasPago',f]]){(upd[fld]||(upd[fld]={}))[o.k]=v;(prev[fld]||(prev[fld]={}))[o.k]=(m[fld]||{})[o.k]??null;}
+      if(!m.desde||o.k<m.desde){if(!('desde' in prev))prev.desde=m.desde??null; if(!upd.desde||o.k<upd.desde)upd.desde=o.k;}
+    } else if(o.kind==='it'){
+      const mem=m.itClubs[o.cid]; const U=((upd.itClubs||(upd.itClubs={}))[o.cid]||(upd.itClubs[o.cid]={})), P=((prev.itClubs||(prev.itClubs={}))[o.cid]||(prev.itClubs[o.cid]={}));
+      for(const [fld,v] of [['pagos','pagado'],['metodos',met],['fechasPago',f]]){(U[fld]||(U[fld]={}))[o.k]=v;(P[fld]||(P[fld]={}))[o.k]=(mem[fld]||{})[o.k]??null;}
+      if(!mem.desde||o.k<mem.desde){if(!('desde' in P))P.desde=mem.desde??null; if(!U.desde||o.k<U.desde)U.desde=o.k;}
+    }
+  }
+  const memberChanged=Object.keys(upd).length>0;
+  if(memberChanged){deepSet(m,upd); write('members/'+m.id,()=>S.db.doc('members/'+m.id).update(upd)).catch(()=>{});}
+  const byAct={};
+  for(const o of opts.filter(o=>o.kind==='act')) (byAct[o.aid]||(byAct[o.aid]=[])).push(o.pid);
+  for(const [aid,pids] of Object.entries(byAct)){const a=S.acts.find(x=>x.id===aid); if(!a) continue; actPrev.push({aid,parts:(a.participantes||[]).map(p=>({...p}))});
+    saveAct(aid,{participantes:(a.participantes||[]).map(p=>pids.includes(p.id)?{...p,pagado:true,metodo:met,fechaPago:f}:p)},true);}
+  closeModal(); render();
+  const tot=opts.reduce((t,o)=>t+o.amt,0);
+  toast(`Pago de ${money(tot)} registrado · ${full(m)}`,()=>{
+    if(memberChanged){deepSet(m,prev);write('members/'+m.id,()=>S.db.doc('members/'+m.id).update(prev)).catch(()=>{});}
+    for(const x of actPrev) saveAct(x.aid,{participantes:x.parts},true);
+    render();});
+}
 
 /* ---------- último cambio ---------- */
 const QUIEN={'frannshot@gmail.com':'Fran','ailedpereira@gmail.com':'Ailed'};
