@@ -51,6 +51,8 @@ h3{font-size:1rem;font-weight:700}
 .num{font-variant-numeric:tabular-nums}
 header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 16px;margin-bottom:14px}
 header.top p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
+header.top p.lastedit{font-size:.8rem;opacity:.85;display:flex;align-items:center;gap:6px}
+header.top p.lastedit::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green,#7bc47f);flex:none}
 nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;padding:6px 0 10px;border-bottom:1px solid var(--line);margin-bottom:20px;scrollbar-width:none}
 nav.tabs button{flex:0 0 auto;border:0;background:transparent;color:var(--muted);font:600 .95rem var(--f-body);padding:8px 14px;border-radius:999px;cursor:pointer}
 nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
@@ -507,6 +509,7 @@ input,select,textarea{font-size:16px!important}
       <div>
         <h1 id="sec-title">Clubes</h1>
         <p id="sub">Cargando datos…</p>
+        <p id="last-edit" class="lastedit" hidden></p>
       </div>
       <div class="topbtns"><button class="btn green" id="btn-pdf" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6"/><path d="M9.5 14.5 12 17l2.5-2.5"/></svg><span id="btn-pdf-l">Generar PDF</span></button>
       <button class="btn primary" id="btn-new" disabled>+ Registrar chica</button></div>
@@ -2437,6 +2440,31 @@ if('serviceWorker' in navigator){
 }
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist();}catch(e){}
 
+/* ---------- último cambio ---------- */
+const QUIEN={'frannshot@gmail.com':'Fran','ailedpereira@gmail.com':'Ailed'};
+function fmtLast(iso){
+  const d=new Date(iso); if(isNaN(d))return '';
+  const min=Math.round((Date.now()-d)/60000);
+  const h=d.toLocaleTimeString('es-VE',{hour:'numeric',minute:'2-digit',hour12:true}).replace(/\s?a\.?\s?m\.?/i,' am').replace(/\s?p\.?\s?m\.?/i,' pm');
+  if(min<1)return 'justo ahora';
+  if(min<60)return `hace ${min} min`;
+  const day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate());
+  const dd=Math.round((day(new Date())-day(d))/864e5);
+  if(dd===0)return `hoy, ${h}`;
+  if(dd===1)return `ayer, ${h}`;
+  return `${d.getDate()} ${MES[d.getMonth()].slice(0,3).toLowerCase()}${d.getFullYear()!==new Date().getFullYear()?' '+d.getFullYear():''}, ${h}`;
+}
+function paintLast(){
+  const el=document.getElementById('last-edit'); if(!el)return;
+  if(!S.db){el.hidden=true;return;}
+  const L=S.lastEdit; el.hidden=false;
+  if(!L||!L.at){el.textContent='Último cambio: aún sin registrar';return;}
+  const who=QUIEN[(L.por||'').toLowerCase()]||(L.por||'').split('@')[0];
+  el.textContent=`Último cambio: ${fmtLast(L.at)}${who?' · '+who:''}`;
+  el.title=new Date(L.at).toLocaleString('es-VE');
+}
+setInterval(paintLast,30000);
+
 /* ---------- boot ---------- */
 render();
 (async()=>{
@@ -2454,6 +2482,7 @@ render();
   db.collection('eventos').onSnapshot(s=>{S.eventos=s.docs.map(d=>({id:d.id,...d.data()}));render();},onErr);
   db.collection('vincci').onSnapshot(s=>{S.vincci=s.docs.map(d=>({id:d.id,...d.data()}));render();},onErr);
   db.collection('movs').onSnapshot(s=>{S.movs=s.docs.map(d=>({id:d.id,...d.data()}));render();},onErr);
+  db.doc('config/ultimoCambio').onSnapshot(s=>{S.lastEdit=s.exists?s.data():null;paintLast();},e=>console.warn(e));
   db.doc('config/general').onSnapshot(s=>{if(s.exists){S.config={precioLibro:15,...s.data(),...(cfgPending||{})};LEADER=S.config.lider||'Yo';const p=document.getElementById('f-price');if(!p||document.activeElement!==p)render();}},onErr);
   setTimeout(autoTasa,1200);
 })();

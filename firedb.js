@@ -26,17 +26,27 @@
   // Firestore espera al servidor antes de resolver; sin internet eso nunca pasa.
   // La app no debe quedarse esperando: el cambio ya se ve al instante y se sube solo después.
   const fire=p=>{p.catch(errFn);return Promise.resolve();};
+  /* Registro del último cambio hecho a mano (las tasas automáticas no cuentan) */
+  let stampT=null;
+  function stamp(col,id,data){
+    if(col==='config'&&id==='ultimoCambio')return;
+    if(col==='tasas'&&data&&data.manual===false)return;
+    const u=auth.currentUser; if(!u)return;
+    const body={at:new Date().toISOString(),por:u.email||''};
+    clearTimeout(stampT);
+    stampT=setTimeout(()=>fs.collection('config').doc('ultimoCambio').set(body).catch(errFn),1500);
+  }
   const toFs=v=>{ // convierte {__delete__:true} y deja null tal cual
     if(isObj(v)){if(v.__delete__===true)return firebase.firestore.FieldValue.delete();const o={};for(const [k,x] of Object.entries(v))o[k]=toFs(x);return o;}
     return v;
   };
   function docRef(col,id){
-    const r=fs.collection(col).doc(id);
+    const r=fs.collection(col).doc(id); id=r.id;
     return {
       id:r.id,
-      set(data){return fire(r.set(clone(data)));},
-      update(patch){return fire(r.set(toFs(clone(patch)),{merge:true}));},
-      delete(){return fire(r.delete());},
+      set(data){stamp(col,id,data);return fire(r.set(clone(data)));},
+      update(patch){stamp(col,id,patch);return fire(r.set(toFs(clone(patch)),{merge:true}));},
+      delete(){stamp(col,id,null);return fire(r.delete());},
       async get(){const s=await r.get();return {id:s.id,exists:s.exists,data:()=>s.data()};},
       onSnapshot(fn,err){return r.onSnapshot(s=>fn({id:s.id,exists:s.exists,data:()=>s.data()}),err||errFn);}
     };
@@ -70,6 +80,7 @@
         const b=fs.batch(); ops.slice(i,i+400).forEach(f=>f(b));
         await b.commit(); done=Math.min(ops.length,i+400); if(onProgress)onProgress(done,ops.length);
       }
+      stamp('import','',null);
     },
     /* Espera a que haya sesión iniciada y los datos cargados */
     ready(){

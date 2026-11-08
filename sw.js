@@ -1,7 +1,7 @@
 /* Service worker del Club de Lectura.
    Cambia VERSION en cada actualización: la app la toma sola al abrirse con internet.
    Los datos están en el almacenamiento del teléfono y no se tocan aquí. */
-const VERSION='2026.10.29-7';
+const VERSION='2026.11.08-1';
 const CACHE='club-lectura-'+VERSION;
 const ASSETS=['./','./index.html','./localdb.js','./firedb.js','./vendor/firebase/firebase-app-compat.js','./vendor/firebase/firebase-auth-compat.js','./vendor/firebase/firebase-firestore-compat.js','./manifest.webmanifest',
   './fonts/fonts.css','./fonts/young-serif-latin-400-normal.woff2','./fonts/bebas-neue-latin-400-normal.woff2',
